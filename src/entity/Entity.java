@@ -15,8 +15,6 @@ public class Entity {
     public String direction;
     public GamePanel gp;
     //used for animation
-    public int spriteCounter = 0;
-    public int spriteNum = 1;
     public Rectangle solidArea;
     public boolean collisionON = false;
 

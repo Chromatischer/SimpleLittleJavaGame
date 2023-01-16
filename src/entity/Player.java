@@ -73,24 +73,12 @@ public class Player extends Entity {
                 idleUpdates = 0;
             }
             updateCount = 0;
-            spriteCounter ++;
         }
         if (idleUpdates >= 5){
             setDirection("idle");
         }
-        if (updateCount == 0 || updateCount == 20 || updateCount == 40){ //update at 20 millisek interval
-            spriteCounter ++;
-        }
         collisionON = false;
         gp.cChecker.checkTile(this);
-        if (spriteCounter >= 10){
-            if(spriteNum < 3){
-                spriteNum++;
-            } else if (spriteNum == 3){
-                spriteNum = 1;
-            }
-            spriteCounter = 0;
-        }
         updateCount ++;
         screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
         screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
