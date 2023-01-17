@@ -16,6 +16,7 @@ public class Entity {
     public GamePanel gp;
     //used for animation
     public Rectangle solidArea;
+    public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionON = false;
 
 

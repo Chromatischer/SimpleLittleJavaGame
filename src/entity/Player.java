@@ -16,7 +16,9 @@ public class Player extends Entity {
         this.keyH = keyH;
         screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
         screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
-        solidArea = new Rectangle(8, 16, 32, 32);
+        solidArea = new Rectangle(8, 16, 32, 32); //TODO: make adaptable to current TileSize!
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         setDefaultValues();
         getPlayerImage();
     }
@@ -56,6 +58,7 @@ public class Player extends Entity {
 
                 collisionON = false;
                 gp.cChecker.checkTile(this);
+                int objIndex = gp.cChecker.checkObject(this, true);
                 if (!collisionON){
                     worldY -= speed;
                 }
@@ -66,6 +69,7 @@ public class Player extends Entity {
 
                 collisionON = false;
                 gp.cChecker.checkTile(this);
+                int objIndex = gp.cChecker.checkObject(this, true);
                 if (!collisionON){
                     worldY += speed;
                 }
@@ -76,6 +80,7 @@ public class Player extends Entity {
 
                 collisionON = false;
                 gp.cChecker.checkTile(this);
+                int objIndex = gp.cChecker.checkObject(this, true);
                 if (!collisionON){
                     worldX -= speed;
                 }
@@ -86,6 +91,7 @@ public class Player extends Entity {
 
                 collisionON = false;
                 gp.cChecker.checkTile(this);
+                int objIndex = gp.cChecker.checkObject(this, true);
                 if (!collisionON){
                     worldX += speed;
                 }
