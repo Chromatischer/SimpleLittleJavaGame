@@ -1,18 +1,16 @@
 package tile;
 
+import main.GamePanel;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.RasterFormatException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import javax.imageio.ImageIO;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.RasterFormatException;
-import java.util.ArrayList;
-import java.util.List;
-
-import main.GamePanel;
+import java.util.Objects;
 
 public class TileManager {
     String worldMap;
@@ -45,7 +43,7 @@ public class TileManager {
         String collisionFile = "/res/world/tileMap.collisions";
         BufferedImage tileMapImage = null;
         try {
-            tileMapImage = ImageIO.read(getClass().getResourceAsStream(image));
+            tileMapImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(image)));
         } catch (IOException | NullPointerException e){
             System.out.println(e.getMessage());
         }
@@ -53,6 +51,7 @@ public class TileManager {
         Boolean[][] collisions = null;
         try {
             InputStream is = getClass().getResourceAsStream(collisionFile);
+            assert is != null;
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             collisions = new Boolean[tileMapImage.getHeight()/16][tileMapImage.getWidth()/16];
             for (int y = 0; y < tileMapImage.getHeight()/16; y++){
@@ -72,18 +71,13 @@ public class TileManager {
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
-        assert collisions != null;
         tile = new Tile[tileMapImage.getWidth()/16 * tileMapImage.getHeight()/16];
         for (int y = 0; y < tileMapImage.getHeight(); y +=16){
             for (int x = 0; x < tileMapImage.getWidth(); x+=16){
                 int tileNum = (y/16)*10 + (x/16);
                 tile [tileNum] = new Tile();
                 tile[tileNum].image = getTile(x,y,16,16, tileMapImage.getWidth(), tileMapImage.getHeight(), worldMap);
-                if (collisions[x/16] [y/16] == true){
-                    tile[tileNum].collision = true;
-                } else {
-                    tile [tileNum].collision = false;
-                }
+                tile[tileNum].collision = collisions[x / 16][y / 16];
             }
         }
         System.out.println("resolving image tile map: DONE");
@@ -97,13 +91,14 @@ public class TileManager {
         System.out.println("reading map file!");
         try {
             InputStream is = getClass().getResourceAsStream(fileMap);
+            assert is != null;
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             int col = 0;
             int row = 0;
             while (col < gp.MAXWORLDCOL && row < gp.MAXWORLDROW){
                 String line = br.readLine();
                 while (col < gp.MAXWORLDCOL){
-                    String numbers[] = line.split(" ");
+                    String[] numbers = line.split(" ");
 
                     int num = Integer.parseInt(numbers[col]);
 
@@ -172,13 +167,13 @@ public class TileManager {
     public BufferedImage getTile(int x, int y, int sizeX, int sizeY, int imgX, int imgY, String tileMapLocation){
         BufferedImage image = null;
         try {
-        image = ImageIO.read(getClass().getResourceAsStream(tileMapLocation));
+        image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(tileMapLocation)));
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
         assert image != null;
         try{
-            if (x < 0 || y < 0 || imgX < 0 || imgY < 0 || sizeX < 0 || sizeY < 0 || image == null){ //checking valid parameters
+            if (x < 0 || y < 0 || imgX < 0 || imgY < 0 || sizeX < 0 || sizeY < 0){ //checking valid parameters
                 return null;
             }
             if ((x * sizeX + sizeX < imgX) || (y * sizeY + sizeY < imgY)){

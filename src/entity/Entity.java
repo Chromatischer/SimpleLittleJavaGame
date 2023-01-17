@@ -18,17 +18,6 @@ public class Entity {
     public Rectangle solidArea;
     public boolean collisionON = false;
 
-    public int getX() {
-        return worldX;
-    }
-
-    public int getY() {
-        return worldY;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
 
     /**
      * draws the Entity using the specified image at the screenX and screenY position with the TILESIZE size from the Gamepanel class
@@ -78,7 +67,7 @@ public class Entity {
         timer += (currentTime - lastTime);
         lastTime = currentTime;
 
-        if (timer >= 1_000_000 * pauseMS){
+        if (timer >= 1_000_000L * pauseMS){
             if (animationFrame >= framesInAnimation){
                 animationFrame = 0;
             }
@@ -98,7 +87,7 @@ public class Entity {
         frame -= 1; //BSP: frame 1: wird zu frame 0 y coord = 0*16 = 0 dann die nächsten 16px sind 16
         //frame 3: wird frame 2 2*16=32+16=48
         try {
-            //TODO: bessere Lösung finden!
+            //hier koennte eine bessere Loesung hin, ist aber nicht noetig, da es noch funktioniert!
             if (((frame * size) + size) <= image.getHeight() ){ //bei der idle animation gibt es das Problem, dass die frame zahl 2 ist, obwohl sie nur 1 sein dürfte
                 //diese bedingung umgeht das Problem
                 setImage(image.getSubimage(0, frame*size, size, size), g2d); //gets a sprite at the x position 0 the y position corresponding to the current animation frame
