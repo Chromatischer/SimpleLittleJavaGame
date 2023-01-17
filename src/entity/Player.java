@@ -11,7 +11,7 @@ public class Player extends Entity {
     KeyManager keyH;
     int updateCount = 0;
     int idleUpdates = 0;
-    int hasKey = 0;
+    public int hasKey = 0;
 
     public Player(GamePanel gp, KeyManager keyH){
         this.gp = gp;
@@ -33,15 +33,15 @@ public class Player extends Entity {
     public void getPlayerImage(){
         try {
             System.out.println("reading images for player!");
-            upAnimation = ImageIO.read(getClass().getResourceAsStream("/res/player/player_walk_up_animation.png"));
+            upAnimation = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/player_walk_up_animation.png")));
 
-            downAnimation = ImageIO.read(getClass().getResourceAsStream("/res/player/player_walk_down_animation.png"));
+            downAnimation = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/player_walk_down_animation.png")));
 
-            leftAnimation = ImageIO.read(getClass().getResourceAsStream("/res/player/player_walk_left_animation.png"));
+            leftAnimation = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/player_walk_left_animation.png")));
 
-            rightAnimation = ImageIO.read(getClass().getResourceAsStream("/res/player/player_walk_right_animation.png"));
+            rightAnimation = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/player_walk_right_animation.png")));
 
-            idleAnimation = ImageIO.read(getClass().getResourceAsStream("/res/player/player_idle_animation.png"));
+            idleAnimation = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/player_idle_animation.png")));
             System.out.println("reading images for player: DONE");
         } catch (IOException e) {
             e.printStackTrace();
@@ -127,6 +127,7 @@ public class Player extends Entity {
                 case "Key":
                     hasKey++;
                     gp.obj[index] = null;
+                    gp.ui.showMessage("you have picked up a key!");
                     break;
                 case "Chest":
                     if (hasKey > 0) {

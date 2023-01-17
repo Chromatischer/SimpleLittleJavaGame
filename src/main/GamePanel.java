@@ -29,15 +29,14 @@ public class GamePanel extends JPanel implements Runnable {
     public ObjectManager objManager = new ObjectManager(this);
     public Player player = new Player(this, keyH);
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
+    public UI ui = new UI(this);
 
     //WORLD SETTINGS:
     public final int MAXWORLDCOL = 100;
     public final int MAXWORLDROW = 100;
-    public final int WORLDWIDTH = TILESIZE * MAXWORLDCOL;
-    public final int WORLDHEIGHT = TILESIZE * MAXWORLDROW;
 
     //FPS:
-    int fps = 75;
+    public int fps = 75;
 
     public GamePanel(JFrame mainFrame){
         mainFrame2 = mainFrame;
@@ -61,7 +60,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run(){
-        double drawInterval = 1_000_000_000/fps;
+        double drawInterval = 1_000_000_000F/fps;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -122,6 +121,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         player.draw(g2);
+        ui.draw(g2);
         g2.dispose(); //disposes of the recource it is using
     }
 }

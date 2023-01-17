@@ -20,5 +20,17 @@ public class ObjectManager {
         gp.obj[2] = new OBJKey();
         gp.obj[2].worldX = 25 * gp.TILESIZE;
         gp.obj[2].worldY = 23 * gp.TILESIZE;
+        gp.obj[3] = new OBJKey();
+        gp.obj[3].worldX = 26 * gp.TILESIZE;
+        gp.obj[3].worldY = 23 * gp.TILESIZE;
+        gp.obj[4] = new OBJKey();
+        gp.obj[4].worldX = 27 * gp.TILESIZE;
+        gp.obj[4].worldY = 23 * gp.TILESIZE;
+        gp.obj[5] = new OBJKey();
+        gp.obj[5].worldX = 28 * gp.TILESIZE;
+        gp.obj[5].worldY = 23 * gp.TILESIZE;
+        gp.obj[6] = new OBJKey();
+        gp.obj[6].worldX = 29 * gp.TILESIZE;
+        gp.obj[6].worldY = 23 * gp.TILESIZE;
     }
 }
