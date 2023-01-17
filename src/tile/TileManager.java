@@ -27,7 +27,6 @@ public class TileManager {
         collisionMap = "/res/world/tileMap.collisions";
         getTileMapImages(worldMap, collisionMap);
         loadMap("/res/maps/world01.txt");
-        System.out.println(tile[0].collision);
     }
 
     /**
