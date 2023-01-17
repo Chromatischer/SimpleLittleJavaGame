@@ -45,11 +45,12 @@ public class UI {
             }
         if (messageON){
             //g2.setFont(g2.getFont().deriveFont(30F)); //this is how to change font size on the fly
-            g2.drawString(message, gp.SCREENWIDTH/2 - message.length()*5, gp.SCREENHEIGHT/2);
+            g2.drawString(message, gp.SCREENWIDTH/2 - (int) g2.getFontMetrics().getStringBounds(message, g2).getWidth()/2, gp.SCREENHEIGHT/2);
             messageFrames ++;
         }
         if (messageFrames > gp.fps*3 && messageON){
             messageON = false;
+            messageFrames = 0;
         }
         //g2.drawString("Keys: " + gp.player.hasKey, 50, 50);
     }
