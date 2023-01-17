@@ -17,10 +17,19 @@ public class UI {
         OBJKey key = new OBJKey();
         keyIMG = key.image;
     }
+
+    /**
+     * displays a message on screen for 3 seconds at a time!
+     * @param text the message to be displayed in the middle of the screen
+     */
     public void showMessage(String text){
         message = text;
         messageON = true;
     }
+
+    /**
+     * the draw methode of the GUI
+     */
     public void draw(Graphics2D g2){ //dont initiate things here!
         g2.setFont(ariel_40);
         g2.setColor(Color.WHITE);
