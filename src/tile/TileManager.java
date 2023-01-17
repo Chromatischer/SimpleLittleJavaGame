@@ -17,8 +17,8 @@ import main.GamePanel;
 public class TileManager {
     String worldMap;
     GamePanel gp;
-    Tile[] tile;
-    int[][] mapTileNum;
+    public Tile[] tile;
+    public int[][] mapTileNum;
 
     public TileManager (GamePanel gp){
         this.gp = gp;
@@ -30,6 +30,7 @@ public class TileManager {
         System.out.println(tile.length);
         System.out.println();
         loadMap("/res/maps/world01.txt");
+        System.out.println(tile[0].collision);
     }
 
     /**
@@ -58,8 +59,10 @@ public class TileManager {
                 for (int x = 0; x < tileMapImage.getWidth()/16; x++){
                     String line = br.readLine();
                     if (line != null) {
-                        if (line.split(" ")[0].equals(y) && line.split(" ")[1].equals(x)) {
-                            collisions[y][x] = Boolean.getBoolean(line.split(" ")[2]);
+                        //simple debug line (could be used later!)
+                        //System.out.println("y:" + y + " x: " + x + " fileY: " + line.split(" ")[0] + " fileX: " + line.split(" ")[1] + " fileBool: " + line.split(" ")[2] + " getBool: " + Boolean.parseBoolean(line.split(" ")[2]));
+                        if (Integer.parseInt(line.split(" ")[0]) == y && Integer.parseInt(line.split(" ")[1]) == x) {
+                            collisions[y][x] = Boolean.parseBoolean(line.split(" ")[2]);
                         } else {
                             collisions[y][x] = false;
                         }

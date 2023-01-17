@@ -46,39 +46,56 @@ public class Player extends Entity {
     
     public void update(){ //called every milisecond
         if (updateCount >= 60){ //executed every 60 miliseconds
+            speed = gp.TILESIZE/3; //keep it modular but this is used for collision detection!
             if (!keyH.upPressed && !keyH.downPressed && !keyH.leftPressed && !keyH.rightPressed){
                 idleUpdates ++;
             }
             if (keyH.upPressed){
                 setDirection("up");
-                worldY -= gp.TILESIZE/3;
                 idleUpdates = 0;
 
+                collisionON = false;
+                gp.cChecker.checkTile(this);
+                if (!collisionON){
+                    worldY -= speed;
+                }
             }
             if (keyH.downPressed){
                 setDirection("down");
-                worldY += gp.TILESIZE/3;
                 idleUpdates = 0;
 
+                collisionON = false;
+                gp.cChecker.checkTile(this);
+                if (!collisionON){
+                    worldY += speed;
+                }
             }
             if (keyH.leftPressed){
                 setDirection("left");
-                worldX -= gp.TILESIZE/3;
                 idleUpdates = 0;
 
+                collisionON = false;
+                gp.cChecker.checkTile(this);
+                if (!collisionON){
+                    worldX -= speed;
+                }
             }
             if (keyH.rightPressed){
                 setDirection("right");
-                worldX += gp.TILESIZE/3;
                 idleUpdates = 0;
+
+                collisionON = false;
+                gp.cChecker.checkTile(this);
+                if (!collisionON){
+                    worldX += speed;
+                }
             }
             updateCount = 0;
         }
         if (idleUpdates >= 5){
             setDirection("idle");
         }
-        collisionON = false;
-        gp.cChecker.checkTile(this);
+
         updateCount ++;
         screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
         screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
