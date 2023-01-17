@@ -5,6 +5,7 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.DimensionUIResource;
 
 import entity.Player;
+import main.object.SuperObject;
 import tile.TileManager;
 
 import java.awt.*;
@@ -25,7 +26,9 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     KeyManager keyH = new KeyManager();
     public CollisionChecker cChecker = new CollisionChecker(this);
+    public ObjectManager objManager = new ObjectManager(this);
     public Player player = new Player(this, keyH);
+    public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
 
     //WORLD SETTINGS:
     public final int MAXWORLDCOL = 100;
@@ -44,6 +47,11 @@ public class GamePanel extends JPanel implements Runnable {
         addKeyListener(keyH); //adding the key listener
         setFocusable(true); //used for catching userinputs
         System.out.println("Gamepanel set up!");
+    }
+    public void setupGame(){
+        System.out.println("setting up game...");
+        objManager.setObject();
+        System.out.println("setting up game: DONE");
     }
 
     public void startGameThread(){
@@ -108,6 +116,11 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         tileM.draw(g2); //make sure to draw the tileMap first cause otherwise the map will layer on top of the player!
+        for (SuperObject superObject : obj) {
+            if (superObject != null) {
+                superObject.draw(g2, this);
+            }
+        }
         player.draw(g2);
         g2.dispose(); //disposes of the recource it is using
     }

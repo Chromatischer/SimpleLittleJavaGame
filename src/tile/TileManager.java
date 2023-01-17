@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.util.Objects;
 
 public class TileManager {
-    String worldMap;
+    String worldMap, collisionMap;
     GamePanel gp;
     public Tile[] tile;
     public int[][] mapTileNum;
@@ -24,7 +24,8 @@ public class TileManager {
         mapTileNum = new int [gp.MAXWORLDCOL] [gp.MAXWORLDROW];
         //getTileImage();
         worldMap = "/res/world/tileMap.png";
-        getTileMapImages(worldMap);
+        collisionMap = "/res/world/tileMap.collisions";
+        getTileMapImages(worldMap, collisionMap);
         System.out.println(tile.length);
         System.out.println();
         loadMap("/res/maps/world01.txt");
@@ -32,15 +33,14 @@ public class TileManager {
     }
 
     /**
-     *  fills the Tile[] array with the sprites from the given image
+     *  fills the Tile[] array with the sprites from the given image also: setting the collision values correspondingly
      * <p>
      * @param image the String for the location to the Sprite map e.g /res/world/tileMap.png
      */
-    public void getTileMapImages(String image){
+    public void getTileMapImages(String image, String collisionMap){
 
         System.out.println("resolving image tile map");
 
-        String collisionFile = "/res/world/tileMap.collisions";
         BufferedImage tileMapImage = null;
         try {
             tileMapImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(image)));
@@ -50,7 +50,7 @@ public class TileManager {
         assert tileMapImage != null;
         Boolean[][] collisions = null;
         try {
-            InputStream is = getClass().getResourceAsStream(collisionFile);
+            InputStream is = getClass().getResourceAsStream(collisionMap);
             assert is != null;
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             collisions = new Boolean[tileMapImage.getHeight()/16][tileMapImage.getWidth()/16];

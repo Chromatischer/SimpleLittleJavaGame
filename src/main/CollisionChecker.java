@@ -7,6 +7,11 @@ public class CollisionChecker {
     public CollisionChecker(GamePanel gp){
         this.gp = gp;
     }
+
+    /**
+     * checks the tiles the hitbox of the entity is colliding with on the collision flag.
+     * @param entity the entity to check collision for
+     */
     public void checkTile(Entity entity){
         //get the world position of the entitys collision box (only sides!)
         int entityLeftWorldX    = entity.worldX + entity.solidArea.x;
