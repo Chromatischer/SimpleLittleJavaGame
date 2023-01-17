@@ -17,8 +17,8 @@ public class ObjectManager {
         gp.obj[1].worldX = 23 * gp.TILESIZE;
         gp.obj[1].worldY = 21 * gp.TILESIZE;
 
-        gp.obj[1] = new OBJKey();
-        gp.obj[1].worldX = 25 * gp.TILESIZE;
-        gp.obj[1].worldY = 23 * gp.TILESIZE;
+        gp.obj[2] = new OBJKey();
+        gp.obj[2].worldX = 25 * gp.TILESIZE;
+        gp.obj[2].worldY = 23 * gp.TILESIZE;
     }
 }

@@ -4,12 +4,14 @@ import main.GamePanel;
 import main.KeyManager;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Objects;
 import javax.imageio.*;
 
 public class Player extends Entity {
     KeyManager keyH;
     int updateCount = 0;
     int idleUpdates = 0;
+    int hasKey = 0;
 
     public Player(GamePanel gp, KeyManager keyH){
         this.gp = gp;
@@ -45,7 +47,13 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
-    
+
+    /**
+     * main player update methode
+     * <p>
+     *     holding things like: movement and collision!
+     * </p>
+     */
     public void update(){ //called every milisecond
         int objIndex = gp.cChecker.checkObject(this, true);
         if (updateCount >= 60){ //executed every 60 miliseconds
@@ -103,13 +111,17 @@ public class Player extends Entity {
         if (idleUpdates >= 5){
             setDirection("idle");
         }
-        pickUpObject(objIndex);
+        interactObject(objIndex);
         updateCount ++;
         screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
         screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
     }
-    int hasKey = 0;
-    public void pickUpObject(int index){
+
+    /**
+     * main interaction methode used for well: interaction of player with objects
+     * @param index the index of the object that was touched!
+     */
+    public void interactObject(int index){
         if (index != 999){ //not no object
             switch (gp.obj[index].name) {
                 case "Key":
@@ -117,35 +129,34 @@ public class Player extends Entity {
                     gp.obj[index] = null;
                     break;
                 case "Chest":
-
-                    break;
-                case "Door":
                     if (hasKey > 0) {
                         gp.obj[index] = null;
                         hasKey --;
                     }
                     break;
+                case "Door":
+                    break;
             }
         }
     }
     public void draw(Graphics2D g2){
-        if (getDirection() == "up"){
+        if (Objects.equals(getDirection(), "up")){
 
             playAnimation(upAnimation, 16, g2, getAnimationFrame(3, 150));
 
-        } else if (getDirection() == "down"){
+        } else if (Objects.equals(getDirection(), "down")){
 
             playAnimation(downAnimation, 16, g2, getAnimationFrame(3, 150));
 
-        } else if (getDirection() == "left"){
+        } else if (Objects.equals(getDirection(), "left")){
 
             playAnimation(leftAnimation, 16, g2, getAnimationFrame(3, 150));
 
-        } else if (getDirection() == "right"){
+        } else if (Objects.equals(getDirection(), "right")){
 
             playAnimation(rightAnimation, 16, g2, getAnimationFrame(3, 150));
 
-        } else if (getDirection() == "idle"){
+        } else if (Objects.equals(getDirection(), "idle")){
 
             playAnimation(idleAnimation, 16, g2, getAnimationFrame(2, 150));
         }
