@@ -26,10 +26,7 @@ public class TileManager {
         worldMap = "/res/world/tileMap.png";
         collisionMap = "/res/world/tileMap.collisions";
         getTileMapImages(worldMap, collisionMap);
-        System.out.println(tile.length);
-        System.out.println();
         loadMap("/res/maps/world01.txt");
-        System.out.println(tile[0].collision);
     }
 
     /**
@@ -39,7 +36,7 @@ public class TileManager {
      */
     public void getTileMapImages(String image, String collisionMap){
 
-        System.out.println("resolving image tile map");
+        System.out.println("resolving image tile map!");
 
         BufferedImage tileMapImage = null;
         try {
@@ -115,7 +112,7 @@ public class TileManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("reading done!");
+        System.out.println("reading map file: DONE");
     }
 
     /**

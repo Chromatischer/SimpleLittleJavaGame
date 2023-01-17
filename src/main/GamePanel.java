@@ -46,10 +46,10 @@ public class GamePanel extends JPanel implements Runnable {
         setDoubleBuffered(true); //I acturally dont fucking know what this does! It is supposed to help though
         addKeyListener(keyH); //adding the key listener
         setFocusable(true); //used for catching userinputs
-        System.out.println("Gamepanel set up!");
+        System.out.println("gamepanel set up!");
     }
     public void setupGame(){
-        System.out.println("setting up game...");
+        System.out.println("setting up game!");
         objManager.setObject();
         System.out.println("setting up game: DONE");
     }

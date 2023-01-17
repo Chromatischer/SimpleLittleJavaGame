@@ -30,7 +30,7 @@ public class Player extends Entity {
     }
     public void getPlayerImage(){
         try {
-            System.out.println("reading images for player");
+            System.out.println("reading images for player!");
             upAnimation = ImageIO.read(getClass().getResourceAsStream("/res/player/player_walk_up_animation.png"));
 
             downAnimation = ImageIO.read(getClass().getResourceAsStream("/res/player/player_walk_down_animation.png"));
@@ -40,25 +40,27 @@ public class Player extends Entity {
             rightAnimation = ImageIO.read(getClass().getResourceAsStream("/res/player/player_walk_right_animation.png"));
 
             idleAnimation = ImageIO.read(getClass().getResourceAsStream("/res/player/player_idle_animation.png"));
-            System.out.println("reading images for player" + "DONE");
+            System.out.println("reading images for player: DONE");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
     public void update(){ //called every milisecond
+        int objIndex = gp.cChecker.checkObject(this, true);
         if (updateCount >= 60){ //executed every 60 miliseconds
             speed = gp.TILESIZE/3; //keep it modular but this is used for collision detection!
             if (!keyH.upPressed && !keyH.downPressed && !keyH.leftPressed && !keyH.rightPressed){
                 idleUpdates ++;
             }
+
             if (keyH.upPressed){
                 setDirection("up");
                 idleUpdates = 0;
 
                 collisionON = false;
                 gp.cChecker.checkTile(this);
-                int objIndex = gp.cChecker.checkObject(this, true);
+                objIndex = gp.cChecker.checkObject(this, true);
                 if (!collisionON){
                     worldY -= speed;
                 }
@@ -69,7 +71,7 @@ public class Player extends Entity {
 
                 collisionON = false;
                 gp.cChecker.checkTile(this);
-                int objIndex = gp.cChecker.checkObject(this, true);
+                objIndex = gp.cChecker.checkObject(this, true);
                 if (!collisionON){
                     worldY += speed;
                 }
@@ -80,7 +82,7 @@ public class Player extends Entity {
 
                 collisionON = false;
                 gp.cChecker.checkTile(this);
-                int objIndex = gp.cChecker.checkObject(this, true);
+                objIndex = gp.cChecker.checkObject(this, true);
                 if (!collisionON){
                     worldX -= speed;
                 }
@@ -91,7 +93,7 @@ public class Player extends Entity {
 
                 collisionON = false;
                 gp.cChecker.checkTile(this);
-                int objIndex = gp.cChecker.checkObject(this, true);
+                objIndex = gp.cChecker.checkObject(this, true);
                 if (!collisionON){
                     worldX += speed;
                 }
@@ -101,10 +103,30 @@ public class Player extends Entity {
         if (idleUpdates >= 5){
             setDirection("idle");
         }
-
+        pickUpObject(objIndex);
         updateCount ++;
         screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
         screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
+    }
+    int hasKey = 0;
+    public void pickUpObject(int index){
+        if (index != 999){ //not no object
+            switch (gp.obj[index].name) {
+                case "Key":
+                    hasKey++;
+                    gp.obj[index] = null;
+                    break;
+                case "Chest":
+
+                    break;
+                case "Door":
+                    if (hasKey > 0) {
+                        gp.obj[index] = null;
+                        hasKey --;
+                    }
+                    break;
+            }
+        }
     }
     public void draw(Graphics2D g2){
         if (getDirection() == "up"){

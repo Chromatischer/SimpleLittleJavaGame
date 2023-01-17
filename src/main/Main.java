@@ -6,7 +6,7 @@ public class Main {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(true);
-        window.setTitle("2D Game");
+        window.setTitle("2D Game (Loading...)");
         System.out.println("winodw created!");
 
         GamePanel gamePanel = new GamePanel(window);
