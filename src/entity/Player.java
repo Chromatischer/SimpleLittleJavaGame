@@ -9,10 +9,8 @@ import javax.imageio.*;
 
 public class Player extends Entity {
     KeyManager keyH;
-    int updateCount = 0;
-    int idleUpdates = 0;
-    public int hasKey = 0;
 
+    public int hasKey = 0;
     public Player(GamePanel gp, KeyManager keyH){
         this.gp = gp;
         this.keyH = keyH;
@@ -24,12 +22,20 @@ public class Player extends Entity {
         setDefaultValues();
         getPlayerImage();
     }
+
+    /**
+     * sets the standard values
+     */
     public void setDefaultValues(){
         //starting point on the map
-        worldX = 22*gp.TILESIZE;
-        worldY = 21*gp.TILESIZE;
+        worldX = 50*gp.TILESIZE;
+        worldY = 50*gp.TILESIZE;
         setDirection("idle");
     }
+
+    /**
+     * loads the player images
+     */
     public void getPlayerImage(){
         try {
             System.out.println("reading images for player!");
@@ -55,7 +61,7 @@ public class Player extends Entity {
      * </p>
      */
     public void update(){ //called every milisecond
-        int objIndex = gp.cChecker.checkObject(this, true);
+        objIndex = gp.cChecker.checkObject(this, true);
         if (updateCount >= 60){ //executed every 60 miliseconds
             speed = gp.TILESIZE/3; //keep it modular but this is used for collision detection!
             if (!keyH.upPressed && !keyH.downPressed && !keyH.leftPressed && !keyH.rightPressed){
@@ -63,58 +69,51 @@ public class Player extends Entity {
             }
 
             if (keyH.upPressed){
-                setDirection("up");
-                idleUpdates = 0;
-
-                collisionON = false;
-                gp.cChecker.checkTile(this);
-                objIndex = gp.cChecker.checkObject(this, true);
-                if (!collisionON){
-                    worldY -= speed;
-                }
+                moveY(true, this, true);
             }
             if (keyH.downPressed){
-                setDirection("down");
-                idleUpdates = 0;
-
-                collisionON = false;
-                gp.cChecker.checkTile(this);
-                objIndex = gp.cChecker.checkObject(this, true);
-                if (!collisionON){
-                    worldY += speed;
-                }
+                moveY(false, this, true);
             }
             if (keyH.leftPressed){
-                setDirection("left");
-                idleUpdates = 0;
-
-                collisionON = false;
-                gp.cChecker.checkTile(this);
-                objIndex = gp.cChecker.checkObject(this, true);
-                if (!collisionON){
-                    worldX -= speed;
-                }
+                moveX(true, this, true);
             }
             if (keyH.rightPressed){
-                setDirection("right");
-                idleUpdates = 0;
-
-                collisionON = false;
-                gp.cChecker.checkTile(this);
-                objIndex = gp.cChecker.checkObject(this, true);
-                if (!collisionON){
-                    worldX += speed;
-                }
+                moveX(false, this, true);
             }
-            updateCount = 0;
         }
+
         if (idleUpdates >= 5){
             setDirection("idle");
         }
+
         interactObject(objIndex);
         updateCount ++;
+
         screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
         screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
+    }
+
+    public void draw(Graphics2D g2){
+        if (Objects.equals(getDirection(), "up")){
+
+            playAnimation(upAnimation, 16, g2, getAnimationFrame(3, 150));
+
+        } else if (Objects.equals(getDirection(), "down")){
+
+            playAnimation(downAnimation, 16, g2, getAnimationFrame(3, 150));
+
+        } else if (Objects.equals(getDirection(), "left")){
+
+            playAnimation(leftAnimation, 16, g2, getAnimationFrame(3, 150));
+
+        } else if (Objects.equals(getDirection(), "right")){
+
+            playAnimation(rightAnimation, 16, g2, getAnimationFrame(3, 150));
+
+        } else if (Objects.equals(getDirection(), "idle")){
+
+            playAnimation(idleAnimation, 16, g2, getAnimationFrame(2, 150));
+        }
     }
 
     /**
@@ -138,28 +137,6 @@ public class Player extends Entity {
                 case "Door":
                     break;
             }
-        }
-    }
-    public void draw(Graphics2D g2){
-        if (Objects.equals(getDirection(), "up")){
-
-            playAnimation(upAnimation, 16, g2, getAnimationFrame(3, 150));
-
-        } else if (Objects.equals(getDirection(), "down")){
-
-            playAnimation(downAnimation, 16, g2, getAnimationFrame(3, 150));
-
-        } else if (Objects.equals(getDirection(), "left")){
-
-            playAnimation(leftAnimation, 16, g2, getAnimationFrame(3, 150));
-
-        } else if (Objects.equals(getDirection(), "right")){
-
-            playAnimation(rightAnimation, 16, g2, getAnimationFrame(3, 150));
-
-        } else if (Objects.equals(getDirection(), "idle")){
-
-            playAnimation(idleAnimation, 16, g2, getAnimationFrame(2, 150));
         }
     }
 }

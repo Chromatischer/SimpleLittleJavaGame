@@ -4,21 +4,60 @@ import java.awt.image.RasterFormatException;
 import java.awt.Rectangle;
 
 import main.GamePanel;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.Graphics2D;
 public class Entity {
-    
-    public int worldX,worldY; //world position
-    public int screenX, screenY; //screen position
+    /**
+     * world position values
+     */
+    public int worldX,worldY;
+    /**
+     * screen position values
+     */
+    public int screenX, screenY;
+    /**
+     * speed value
+     */
     public int speed;
+    /**
+     * used for going into idle state
+     */
+    int idleUpdates = 0;
+    /**
+     * the intersecting object
+     */
+    int objIndex;
+    int updateCount;
+    /**
+     * player sprite maps
+     */
     public BufferedImage upAnimation, downAnimation, leftAnimation, rightAnimation, idleAnimation;
+    /**
+     * used for direction - do not set directly (use setDirection() and getDirection())
+     */
     public String direction;
     public GamePanel gp;
-    //used for animation
+    /**
+     * hit-box
+     */
     public Rectangle solidArea;
+    /**
+     * the default values used for checking intersecting objects
+     */
     public int solidAreaDefaultX, solidAreaDefaultY;
+    /**
+     * collision boolean
+     */
     public boolean collisionON = false;
-
+    /**
+     * the current animation frame
+     */
+    int animationFrame = 1;
+    /**
+     * used for the calculations of the animation frame methode
+     */
+    long currentTime, lastTime, timer;
 
     /**
      * draws the Entity using the specified image at the screenX and screenY position with the TILESIZE size from the Gamepanel class
@@ -26,7 +65,7 @@ public class Entity {
      * <p>
      * add the g2d param here when you understand what it is!
      */
-    public void setImage(BufferedImage image, Graphics2D g2d){
+    public void setImage(BufferedImage image, @NotNull Graphics2D g2d){
         g2d.drawImage(image, screenX, screenY, gp.TILESIZE, gp.TILESIZE, null);//temp fix (GamePanel TILESIZE muss noch durchgereicht werden)
     }
 
@@ -34,7 +73,7 @@ public class Entity {
      * safely sets the direction for the entity
      * @param dir one of: up, down, left, right, idle
      */
-    public void setDirection(String dir){
+    public void setDirection(@NotNull String dir){
         if (dir.equals("up") || dir.equals("down") || dir.equals("left") || dir.equals("right") || dir.equals("idle")){
             direction = dir;
         }
@@ -51,11 +90,6 @@ public class Entity {
             return null;
         }
     }
-
-    int animationFrame = 1;
-    long currentTime;
-    long lastTime;
-    long timer;
 
     /**
      * a methode to get a continuing counter for animations
@@ -84,7 +118,7 @@ public class Entity {
      * @param size the width and height of each frame
      * @param frame the number of frame that should be shown
      */
-    public void playAnimation(BufferedImage image, int size, Graphics2D g2d, int frame){
+    public void playAnimation(@NotNull BufferedImage image, int size, Graphics2D g2d, int frame){
         frame -= 1; //BSP: frame 1: wird zu frame 0 y coord = 0*16 = 0 dann die nächsten 16px sind 16
         //frame 3: wird frame 2 2*16=32+16=48
         try {
@@ -102,6 +136,78 @@ public class Entity {
             System.out.println("size:" + size);
             System.out.println("looking at pixels:" + (frame*size) + "-" + ((frame*size) + size));
             System.out.println(animationFrame);
+        }
+    }
+
+    /**
+     * moves the entity on the x-axis
+     * @param left if true: move left else move right
+     * @param entity the entity to move
+     * @param player set true if entity is player
+     */
+    public void moveX(boolean left, Entity entity, boolean player){
+        if (left) {
+            if (worldX - speed > 0) {
+                setDirection("left");
+                idleUpdates = 0;
+
+                collisionON = false;
+                gp.cChecker.checkTile(entity);
+                objIndex = gp.cChecker.checkObject(entity, player);
+                if (! collisionON) {
+                    worldX -= speed;
+                }
+                updateCount = 0;
+            }
+        } else {
+            if (worldX + speed < gp.MAXWORLDCOL * gp.TILESIZE - gp.TILESIZE) {
+                setDirection("right");
+                idleUpdates = 0;
+
+                collisionON = false;
+                gp.cChecker.checkTile(entity);
+                objIndex = gp.cChecker.checkObject(entity, player);
+                if (! collisionON) {
+                    worldX += speed;
+                }
+                updateCount = 0;
+            }
+        }
+    }
+
+    /**
+     * moves the entity on the y-axis
+     * @param up if true: moves entity up else: moves down
+     * @param entity the entity to move
+     * @param player set true if player
+     */
+    public void moveY(boolean up, Entity entity, boolean player){
+        if (up) {
+            if (worldY - speed > 0) {
+                setDirection("up");
+                idleUpdates = 0;
+
+                collisionON = false;
+                gp.cChecker.checkTile(entity);
+                objIndex = gp.cChecker.checkObject(entity, player);
+                if (! collisionON) {
+                    worldY -= speed;
+                }
+                updateCount = 0;
+            }
+        } else {
+            if (worldY + speed < gp.MAXWORLDCOL * gp.TILESIZE - gp.TILESIZE) {
+                setDirection("down");
+                idleUpdates = 0;
+
+                collisionON = false;
+                gp.cChecker.checkTile(entity);
+                objIndex = gp.cChecker.checkObject(entity, player);
+                if (! collisionON) {
+                    worldY += speed;
+                }
+                updateCount = 0;
+            }
         }
     }
 }
