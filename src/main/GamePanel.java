@@ -11,6 +11,10 @@ import tile.TileManager;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
+    /**
+     * everything that is debug related should only be displayed when this boolean is set to true!
+     */
+    public final boolean DEBUG = true;
 
     //SCREEN SETTINGS
     final int ORIGINALTILESIZE = 16;
@@ -111,7 +115,15 @@ public class GamePanel extends JPanel implements Runnable {
         player.update();
     }
 
+    int avrgLenght = 80;
+    long [] passedTimes = new long[avrgLenght];
+    int cycles = 0;
+    long result = 0;
     public void paintComponent(Graphics g){
+        //DEBUG
+        long drawStart;
+        drawStart = System.nanoTime();
+
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         tileM.draw(g2); //make sure to draw the tileMap first cause otherwise the map will layer on top of the player!
@@ -122,6 +134,23 @@ public class GamePanel extends JPanel implements Runnable {
         }
         player.draw(g2);
         ui.draw(g2);
+        if (cycles < avrgLenght) {
+            long drawEnd = System.nanoTime();
+            passedTimes[cycles] = drawEnd - drawStart;
+            cycles ++;
+        } else {
+            cycles = 0;
+            long added = 0;
+            for (int i = 0; i < avrgLenght; i++){
+                added += passedTimes[i];
+                passedTimes[i] = 0;
+            }
+            result = added/avrgLenght;
+            if (DEBUG) {
+                System.out.println(avrgLenght + " drawtimes took: " + result + "ns on average!");
+                System.out.println("that is: " + (double) Math.round(result / 100_0F) / 100 + "ms");
+            }
+        }
         g2.dispose(); //disposes of the recource it is using
     }
 }
