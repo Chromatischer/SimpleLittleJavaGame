@@ -1,6 +1,8 @@
 package entity;
 
+import items.ItemStack;
 import main.GamePanel;
+import main.Inventory;
 import main.KeyManager;
 import java.awt.*;
 import java.io.IOException;
@@ -28,6 +30,11 @@ public class Player extends Entity {
      */
     public void setDefaultValues(){
         //starting point on the map
+        inventory.addItemStack(new ItemStack("air", 6));
+        System.out.println(inventory.getAllTypesAsSting());
+        System.out.println(inventory.getSize());
+        inventory.setSize(5);
+        System.out.println(inventory.getAllTypesAsSting());
         worldX = 50*gp.TILESIZE;
         worldY = 50*gp.TILESIZE;
         setDirection("idle");

@@ -52,6 +52,8 @@ public class UI {
             messageON = false;
             messageFrames = 0;
         }
-        //g2.drawString("Keys: " + gp.player.hasKey, 50, 50);
+    }
+    public void openInventory(){
+
     }
 }

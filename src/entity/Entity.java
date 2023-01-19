@@ -4,6 +4,7 @@ import java.awt.image.RasterFormatException;
 import java.awt.Rectangle;
 
 import main.GamePanel;
+import main.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Graphics2D;
@@ -37,6 +38,7 @@ public class Entity {
      * used for direction - do not set directly (use setDirection() and getDirection())
      */
     public String direction;
+    public Inventory inventory = new Inventory(6, "entity");
     public GamePanel gp;
     /**
      * hit-box
