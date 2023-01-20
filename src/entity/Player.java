@@ -1,13 +1,12 @@
 package entity;
 
-import items.ItemStack;
 import main.GamePanel;
-import main.Inventory;
 import main.KeyManager;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
-import javax.imageio.*;
 
 public class Player extends Entity {
     KeyManager keyH;
@@ -30,11 +29,6 @@ public class Player extends Entity {
      */
     public void setDefaultValues(){
         //starting point on the map
-        inventory.addItemStack(new ItemStack("air", 6));
-        System.out.println(inventory.getAllTypesAsSting());
-        System.out.println(inventory.getSize());
-        inventory.setSize(5);
-        System.out.println(inventory.getAllTypesAsSting());
         worldX = 50*gp.TILESIZE;
         worldY = 50*gp.TILESIZE;
         setDirection("idle");

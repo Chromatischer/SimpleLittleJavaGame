@@ -2,16 +2,24 @@ package main;
 
 import items.ItemStack;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Inventory {
+    /**
+     * array containing all inventory items
+     */
     ItemStack[] itemStacks;
-    int size;
+    /**
+     * type of inventory e.g: player, chest
+     */
+    String type;
     public Inventory(int size, String type){
-        this.size = size;
-        for (int i = 0; i < size; i++) {
-            itemStacks = new ItemStack[]{new ItemStack("air", 4)}; //TODO: figure out what the hell it is doing and WHY it is working that way!
+        this.type = type;
+        itemStacks = new ItemStack[size];
+        for (int i = 0; i < itemStacks.length; i++) {
+            itemStacks[i] = new ItemStack("air", 0);
         }
     }
 
@@ -30,7 +38,7 @@ public class Inventory {
      */
     public void addItemStack(ItemStack itemStack){
         for (int i = 0; i < itemStacks.length; i++) {
-            if (itemStacks[i].getType() == null){
+            if (itemStacks[i].getType().equals("air") && itemStacks[i].getStackSize() == 0){
                 itemStacks[i] = itemStack;
                 break;
             }
@@ -45,14 +53,45 @@ public class Inventory {
     public void setItemStack(ItemStack itemStack, int place){
         itemStacks[place] = itemStack;
     }
-    //TODO: figure this shit out I am to tired for any of this!
+
+    /**
+     * sets the size of an Inventory after initial creation
+     * <p>
+     *     note: if the array beforehand had contained more itemstacks the may be deleted!
+     * </p>
+     * @param size the new size
+     */
     public void setSize(int size) {
-        for (int i = 0; i < size; i++) {
-            itemStacks = new ItemStack[]{new ItemStack("air", 0)}; //TODO: figure out what the hell it is doing and WHY it is working that way!
+        List<ItemStack> buffer = new ArrayList<>();
+        //copying all not dummy items into new list
+        for (ItemStack itemStack : itemStacks) {
+            if (!itemStack.getType().equals("air") && itemStack.getStackSize() != 0) {
+                buffer.add(itemStack);
+            }
+        }
+        //converting into array for arraycopy
+        ItemStack[] bufferArray = buffer.toArray(new ItemStack[0]);
+        //setting new array size
+        itemStacks = new ItemStack[size];
+        System.arraycopy(bufferArray, 0, itemStacks, 0, bufferArray.length);
+        //filling all now null spaces with dummy items
+        for (int i = 0; i < itemStacks.length; i++){
+            if (itemStacks[i] == null){
+                itemStacks[i] = new ItemStack("air", 0);
+            }
         }
     }
+
+    /**
+     * returns all the item types of an inventory as a String
+     * <p>
+     *     for debug purposes
+     * </p>
+     * @return a String with all item types
+     */
     public String getAllTypesAsSting(){
         StringBuilder value = new StringBuilder();
+        value.append("[");
         if (itemStacks.length != 0) {
             for (ItemStack itemStack : itemStacks) {
                 if (itemStack != null) {
@@ -64,9 +103,23 @@ public class Inventory {
         } else {
             return "null";
         }
+        value.append("]");
         return value.toString();
     }
+
+    /**
+     * gets the size of the inventory
+     * @return the size of the inventory in question
+     */
     public int getSize(){
         return itemStacks.length;
+    }
+
+    /**
+     * gets the type of inventory
+     * @return the inventory type
+     */
+    public String getType(){
+        return type;
     }
 }
