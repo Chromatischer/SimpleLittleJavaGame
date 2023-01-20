@@ -128,4 +128,38 @@ public class Inventory {
     public INVENTORY_TYPE getType(){
         return invType;
     }
+
+    /**
+     * gets the loction for a given itemstack
+     * @param itemStack the itemstack to get the location of
+     * @return the position starting from 0 counting up
+     */
+    public Integer getLocation(ItemStack itemStack){
+        for (int i = 0; i < itemStacks.length; i++){
+            if (itemStacks[i] == itemStack){
+                return i;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * moves or combines the itemstack from startpos to endpos
+     * @param startPoint the position of the start itemstack
+     * @param endPoint the position the itemstack should end in
+     * @return whether the operation could be executed
+     */
+    public boolean moveItemstack(int startPoint, int endPoint){
+        if (itemStacks[endPoint].getType() == itemStacks[startPoint].getType()){
+            itemStacks[endPoint].setStackSize(itemStacks[endPoint].getStackSize() + itemStacks[startPoint].getStackSize());
+            itemStacks[startPoint] = new ItemStack(ITEM_TYPE.AIR, 0);
+            return true;
+        } else if (itemStacks[endPoint].getType() == ITEM_TYPE.AIR){
+            itemStacks[endPoint] = itemStacks[startPoint];
+            itemStacks[startPoint] = new ItemStack(ITEM_TYPE.AIR, 0);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

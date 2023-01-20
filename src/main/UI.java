@@ -19,10 +19,6 @@ public class UI {
      */
     Font ariel_40 = new Font("Arial", Font.BOLD, 30); //TODO: make font size adaptable
     /**
-     * font for small description e.g: item amounts
-     */
-    Font ariel_10 = new Font("Arial", Font.PLAIN, 20);
-    /**
      * the image for the KEY ui
      */
     BufferedImage keyIMG; //TODO: remove when completely changed to inventory display
@@ -105,12 +101,18 @@ public class UI {
                             g2.drawImage(inv, x * gp.TILESIZE + spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
                             count++;
                         }
-                        ItemStack current = openInventory.getItemstack(y + x);
+                        ItemStack current = openInventory.getItemstack(y*9 + x);
                         if (current.getType() != ITEM_TYPE.AIR) {
                             g2.drawImage(current.getImage(), x * gp.TILESIZE + spaceX + (gp.TILESIZE / 16), y * gp.TILESIZE + spaceY + (gp.TILESIZE / 16), (gp.TILESIZE - gp.TILESIZE / 8), (gp.TILESIZE - gp.TILESIZE / 8), null); //drawing the item in the correct slot
-                            //g2.setFont(ariel_40);
-                            String stackAmount = String.valueOf(current.getStackSize());
-                            g2.setFont(g2.getFont().deriveFont(Font.PLAIN,(float) gp.TILESIZE/2));
+                            String stackAmount = "";
+                            if (current.getStackSize() < 1000) {
+                                stackAmount = String.valueOf(current.getStackSize());
+                            } else if (current.getStackSize() == 1000){
+                                stackAmount = current.getStackSize()/1000 + "k";
+                            } else if (current.getStackSize() > 1000 && current.getStackSize() < 1_000_000){
+                                stackAmount = Math.round(current.getStackSize() / 100D) / 10D + "k";
+                            }
+                            g2.setFont(g2.getFont().deriveFont(Font.BOLD,(float) gp.TILESIZE/3));
                             int textX = (x * gp.TILESIZE + spaceX + gp.TILESIZE) - (int) g2.getFontMetrics().getStringBounds(stackAmount, g2).getWidth() - (gp.TILESIZE/13);
                             int textY = (y * gp.TILESIZE + spaceY + gp.TILESIZE) - ((int) g2.getFontMetrics().getStringBounds(stackAmount, g2).getHeight()/6) - (gp.TILESIZE/13);
                             g2.drawString(stackAmount, textX, textY);

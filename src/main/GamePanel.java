@@ -29,10 +29,11 @@ public class GamePanel extends JPanel implements Runnable {
     TileManager tileM = new TileManager(this);
     Thread gameThread;
     KeyManager keyH = new KeyManager();
+    MouseClickManager mouseKM = new MouseClickManager();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public ObjectManager objManager = new ObjectManager(this);
     public UI ui = new UI(this);
-    public Player player = new Player(this, keyH, ui);
+    public Player player = new Player(this, keyH,mouseKM, ui);
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
 
     //WORLD SETTINGS:
