@@ -4,10 +4,7 @@ import inventory.INVENTORY_TYPE;
 import inventory.Inventory;
 import items.ITEM_TYPE;
 import items.ItemStack;
-import main.GamePanel;
-import main.KeyManager;
-import main.MouseClickManager;
-import main.UI;
+import main.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -45,12 +42,15 @@ public class Player extends Entity {
      * sets the standard values
      */
     public void setDefaultValues(){
+        maxHealth = 11.5;
+        health = maxHealth;
         inventory = new Inventory(27, INVENTORY_TYPE.PLAYER);
         ItemStack key2000 = new ItemStack(ITEM_TYPE.KEY, 2000);
         inventory.addItemStack(key2000);
         inventory.setItemStack(new ItemStack(ITEM_TYPE.KEY, 2), 2);
         inventory.moveItemstack(inventory.getLocation(key2000), 2);
         ui.openInventory(inventory);
+        ui.drawHealth(health, HEALTH_EFFECTS.NORMAL);
         //starting point on the map
         worldX = 50*gp.TILESIZE;
         worldY = 50*gp.TILESIZE;

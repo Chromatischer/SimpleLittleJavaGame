@@ -42,6 +42,23 @@ public class UI {
      * the currently open inventory if non set to null
      */
     Inventory openInventory = null;
+    /**
+     * the amount of full hearts to render
+     */
+    int fullHearts;
+    /**
+     * the amount of half hearts to render
+     */
+    int halfHearts;
+    /**
+     * the effect to display the hearts as
+     */
+    HEALTH_EFFECTS heartEffect;
+    /**
+     * images to use for the hearts
+     */
+    BufferedImage fullHeartImg, halfHeartImg;
+
     public UI(GamePanel gp){
         this.gp = gp;
         OBJKey key = new OBJKey();
@@ -77,6 +94,22 @@ public class UI {
                 g2.drawImage(keyIMG, gp.TILESIZE / 2, gp.TILESIZE / 2 + i * 9, gp.TILESIZE, gp.TILESIZE, null);
             }
             g2.drawString("+" + gp.player.hasKey, 75, 75); //TODO: make position adaptable
+        }
+        int heartcol = 10; //amount of hearts in one line
+        int heartrow = (int) Math.ceil(fullHearts / (double) heartcol); //amount of rows (round up)
+        int heartcount = 0;
+        for (int y = 0; y < heartrow; y++) {
+            for (int x = 0; x < heartcol; x ++){
+                if (fullHearts > heartcount){
+                    g2.drawImage(fullHeartImg, x * (gp.TILESIZE/2) + gp.TILESIZE/4, y * (gp.TILESIZE/2) + gp.TILESIZE/4, gp.TILESIZE/2, gp.TILESIZE/2, null);
+                    heartcount++;
+                }
+                if (halfHearts == 1) {
+                    if (y * 10 + x == heartcount) {
+                        g2.drawImage(halfHeartImg, x * (gp.TILESIZE / 2) + gp.TILESIZE / 4, y * (gp.TILESIZE / 2) + gp.TILESIZE / 4, gp.TILESIZE / 2, gp.TILESIZE / 2, null);
+                    }
+                }
+            }
         }
         if (openInventory == null) {
             if (messageON) {
@@ -160,5 +193,37 @@ public class UI {
      */
     public Inventory getOpenInventory(){
         return openInventory;
+    }
+
+    /**
+     * draws given health on screen
+     * @param health the health to draw
+     * @param effect the effect to draw the hearts at
+     */
+    public void drawHealth(double health, HEALTH_EFFECTS effect){
+        this.heartEffect = effect;
+        if (health % 1 == 0){
+            fullHearts = (int) health;
+            halfHearts = 0;
+        } else {
+            fullHearts = (int) (health - 0.5);
+            halfHearts = 1;
+        }
+        if (gp.DEBUG){
+            System.out.println("full hearts: " + fullHearts + " half hearts: " + halfHearts);
+        }
+        try {
+            switch (effect){
+                case NORMAL -> {
+                    halfHeartImg = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/inv/inv.png")));
+                    fullHeartImg = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/object/key.png")));
+                }
+                case OTHER -> {
+
+                }
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

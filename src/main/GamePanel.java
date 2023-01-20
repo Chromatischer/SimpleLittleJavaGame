@@ -110,8 +110,6 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    //for X values + equals right
-    //for Y values + equals down
     public void update(){
         player.update();
     }

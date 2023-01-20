@@ -30,6 +30,10 @@ public class Entity {
      * the intersecting object
      */
     int objIndex;
+    /**
+     * health stats for entities
+     */
+    double health, maxHealth;
     int updateCount;
     /**
      * player sprite maps
@@ -220,5 +224,13 @@ public class Entity {
                 }
             }
         }
+    }
+
+    /**
+     * gets the health of the entity
+     * @return the health
+     */
+    public double getHealth(){
+        return health;
     }
 }
