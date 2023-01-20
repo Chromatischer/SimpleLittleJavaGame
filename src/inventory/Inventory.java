@@ -42,6 +42,11 @@ public class Inventory {
             if (itemStacks[i].getType().equals(ITEM_TYPE.AIR) && itemStacks[i].getStackSize() == 0){
                 itemStacks[i] = itemStack;
                 break;
+            } else if (itemStacks[i].getType() == itemStack.getType()){
+                int oldStackSize = itemStacks[i].getStackSize();
+                int newStackSize = oldStackSize + itemStack.getStackSize();
+                itemStacks[i].setStackSize(newStackSize);
+                break;
             }
         }
     }

@@ -52,6 +52,14 @@ public class ItemStack {
     }
 
     /**
+     * sets the stack size for the item stack
+     * @param stackSize the new stack size
+     */
+    public void setStackSize(int stackSize){
+        this.stackSize = stackSize;
+    }
+
+    /**
      * overrides the type for the itemstack
      * @param type the new type for the itemstack
      */
