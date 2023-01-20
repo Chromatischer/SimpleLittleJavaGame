@@ -39,6 +39,9 @@ public class Entity {
      * used for direction - do not set directly (use setDirection() and getDirection())
      */
     public String direction;
+    /**
+     * the inventory of the entity initialize in its own class!
+     */
     public Inventory inventory;
     public GamePanel gp;
     UI ui;

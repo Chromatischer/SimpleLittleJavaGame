@@ -7,6 +7,7 @@ import items.ItemStack;
 import main.GamePanel;
 import main.KeyManager;
 import main.UI;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,7 +25,7 @@ public class Player extends Entity {
      * @param keyH the keyInputs to receive
      * @param ui the ui to use
      */
-    public Player(GamePanel gp, KeyManager keyH, UI ui){
+    public Player(@NotNull GamePanel gp, KeyManager keyH, UI ui){
         this.gp = gp;
         this.keyH = keyH;
         this.ui = ui;

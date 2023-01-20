@@ -4,6 +4,7 @@ import inventory.Inventory;
 import items.ITEM_TYPE;
 import items.ItemStack;
 import main.object.OBJKey;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -68,7 +69,7 @@ public class UI {
     /**
      * the draw methode of the GUI
      */
-    public void draw(Graphics2D g2){ //dont initiate things here!
+    public void draw(@NotNull Graphics2D g2){ //dont initiate things here!
         g2.setFont(ariel_40);
         g2.setColor(Color.WHITE);
         if (gp.player.hasKey <= 3) {
@@ -102,19 +103,23 @@ public class UI {
                     for (int x = 0; x < col; x++) {
                         if (openInventory.getSize() > count) { //displaying correct amount of inv-slots
                             g2.drawImage(inv, x * gp.TILESIZE + spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
-                            ItemStack current = openInventory.getItemstack(y + x);
-                            if (current.getType() != ITEM_TYPE.AIR) {
-                                g2.drawImage(current.getImage(), x * gp.TILESIZE + spaceX + (gp.TILESIZE / 16), y * gp.TILESIZE + spaceY + (gp.TILESIZE / 16), (gp.TILESIZE - gp.TILESIZE / 8), (gp.TILESIZE - gp.TILESIZE / 8), null); //drawing the item in the correct slot
-                                g2.setFont(ariel_10);
-                                String stackAmount = String.valueOf(current.getStackSize());
-                                //g2.drawString(stackAmount, x*gp.TILESIZE, y * gp.TILESIZE);
-                            }
                             count++;
                         }
+                        ItemStack current = openInventory.getItemstack(y + x);
+                        if (current.getType() != ITEM_TYPE.AIR) {
+                            g2.drawImage(current.getImage(), x * gp.TILESIZE + spaceX + (gp.TILESIZE / 16), y * gp.TILESIZE + spaceY + (gp.TILESIZE / 16), (gp.TILESIZE - gp.TILESIZE / 8), (gp.TILESIZE - gp.TILESIZE / 8), null); //drawing the item in the correct slot
+                            //g2.setFont(ariel_40);
+                            String stackAmount = String.valueOf(current.getStackSize());
+                            g2.setFont(g2.getFont().deriveFont(Font.PLAIN,(float) gp.TILESIZE/2));
+                            int textX = (x * gp.TILESIZE + spaceX + gp.TILESIZE) - (int) g2.getFontMetrics().getStringBounds(stackAmount, g2).getWidth() - (gp.TILESIZE/13);
+                            int textY = (y * gp.TILESIZE + spaceY + gp.TILESIZE) - ((int) g2.getFontMetrics().getStringBounds(stackAmount, g2).getHeight()/6) - (gp.TILESIZE/13);
+                            g2.drawString(stackAmount, textX, textY);
+                        }
+
                     }
                 }
             } catch (NullPointerException e){
-                System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that can not wait!");
+                if(gp.DEBUG){System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that can not wait!");}
             }
         }
     }
