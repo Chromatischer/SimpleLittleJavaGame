@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 
 import main.GamePanel;
 import main.Inventory;
+import main.UI;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Graphics2D;
@@ -38,8 +39,9 @@ public class Entity {
      * used for direction - do not set directly (use setDirection() and getDirection())
      */
     public String direction;
-    public Inventory inventory = new Inventory(6, "entity");
+    public Inventory inventory = new Inventory(27, "entity");
     public GamePanel gp;
+    UI ui;
     /**
      * hit-box
      */
@@ -148,31 +150,33 @@ public class Entity {
      * @param player set true if entity is player
      */
     public void moveX(boolean left, Entity entity, boolean player){
-        if (left) {
-            if (worldX - speed > 0) {
-                setDirection("left");
-                idleUpdates = 0;
+        if (ui.getOpenInventory() == null) {
+            if (left) {
+                if (worldX - speed > 0) {
+                    setDirection("left");
+                    idleUpdates = 0;
 
-                collisionON = false;
-                gp.cChecker.checkTile(entity);
-                objIndex = gp.cChecker.checkObject(entity, player);
-                if (! collisionON) {
-                    worldX -= speed;
+                    collisionON = false;
+                    gp.cChecker.checkTile(entity);
+                    objIndex = gp.cChecker.checkObject(entity, player);
+                    if (! collisionON) {
+                        worldX -= speed;
+                    }
+                    updateCount = 0;
                 }
-                updateCount = 0;
-            }
-        } else {
-            if (worldX + speed < gp.MAXWORLDCOL * gp.TILESIZE - gp.TILESIZE) {
-                setDirection("right");
-                idleUpdates = 0;
+            } else {
+                if (worldX + speed < gp.MAXWORLDCOL * gp.TILESIZE - gp.TILESIZE) {
+                    setDirection("right");
+                    idleUpdates = 0;
 
-                collisionON = false;
-                gp.cChecker.checkTile(entity);
-                objIndex = gp.cChecker.checkObject(entity, player);
-                if (! collisionON) {
-                    worldX += speed;
+                    collisionON = false;
+                    gp.cChecker.checkTile(entity);
+                    objIndex = gp.cChecker.checkObject(entity, player);
+                    if (! collisionON) {
+                        worldX += speed;
+                    }
+                    updateCount = 0;
                 }
-                updateCount = 0;
             }
         }
     }
@@ -183,32 +187,34 @@ public class Entity {
      * @param entity the entity to move
      * @param player set true if player
      */
-    public void moveY(boolean up, Entity entity, boolean player){
-        if (up) {
-            if (worldY - speed > 0) {
-                setDirection("up");
-                idleUpdates = 0;
+    public void moveY(boolean up, Entity entity, boolean player) {
+        if (ui.getOpenInventory() == null) {
+            if (up) {
+                if (worldY - speed > 0) {
+                    setDirection("up");
+                    idleUpdates = 0;
 
-                collisionON = false;
-                gp.cChecker.checkTile(entity);
-                objIndex = gp.cChecker.checkObject(entity, player);
-                if (! collisionON) {
-                    worldY -= speed;
+                    collisionON = false;
+                    gp.cChecker.checkTile(entity);
+                    objIndex = gp.cChecker.checkObject(entity, player);
+                    if (! collisionON) {
+                        worldY -= speed;
+                    }
+                    updateCount = 0;
                 }
-                updateCount = 0;
-            }
-        } else {
-            if (worldY + speed < gp.MAXWORLDCOL * gp.TILESIZE - gp.TILESIZE) {
-                setDirection("down");
-                idleUpdates = 0;
+            } else {
+                if (worldY + speed < gp.MAXWORLDCOL * gp.TILESIZE - gp.TILESIZE) {
+                    setDirection("down");
+                    idleUpdates = 0;
 
-                collisionON = false;
-                gp.cChecker.checkTile(entity);
-                objIndex = gp.cChecker.checkObject(entity, player);
-                if (! collisionON) {
-                    worldY += speed;
+                    collisionON = false;
+                    gp.cChecker.checkTile(entity);
+                    objIndex = gp.cChecker.checkObject(entity, player);
+                    if (! collisionON) {
+                        worldY += speed;
+                    }
+                    updateCount = 0;
                 }
-                updateCount = 0;
             }
         }
     }

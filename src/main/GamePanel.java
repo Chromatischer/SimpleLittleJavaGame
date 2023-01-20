@@ -14,7 +14,7 @@ public class GamePanel extends JPanel implements Runnable {
     /**
      * everything that is debug related should only be displayed when this boolean is set to true!
      */
-    public final boolean DEBUG = true;
+    public final boolean DEBUG = false;
 
     //SCREEN SETTINGS
     final int ORIGINALTILESIZE = 16;
@@ -31,9 +31,9 @@ public class GamePanel extends JPanel implements Runnable {
     KeyManager keyH = new KeyManager();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public ObjectManager objManager = new ObjectManager(this);
-    public Player player = new Player(this, keyH);
-    public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
     public UI ui = new UI(this);
+    public Player player = new Player(this, keyH, ui);
+    public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
 
     //WORLD SETTINGS:
     public final int MAXWORLDCOL = 100;

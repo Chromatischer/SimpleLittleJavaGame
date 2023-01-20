@@ -2,6 +2,7 @@ package entity;
 
 import main.GamePanel;
 import main.KeyManager;
+import main.UI;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,9 +13,10 @@ public class Player extends Entity {
     KeyManager keyH;
 
     public int hasKey = 0;
-    public Player(GamePanel gp, KeyManager keyH){
+    public Player(GamePanel gp, KeyManager keyH, UI ui){
         this.gp = gp;
         this.keyH = keyH;
+        this.ui = ui;
         screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
         screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
         solidArea = new Rectangle(8, 16, 32, 32); //TODO: make adaptable to current TileSize!
@@ -28,6 +30,8 @@ public class Player extends Entity {
      * sets the standard values
      */
     public void setDefaultValues(){
+        System.out.println("opening inventory");
+        ui.openInventory(inventory);
         //starting point on the map
         worldX = 50*gp.TILESIZE;
         worldY = 50*gp.TILESIZE;
