@@ -14,7 +14,7 @@ public class GamePanel extends JPanel implements Runnable {
     /**
      * everything that is debug related should only be displayed when this boolean is set to true!
      */
-    public final boolean DEBUG = false;
+    public final boolean DEBUG = Main.DEBUG;
 
     //SCREEN SETTINGS
     final int ORIGINALTILESIZE = 16;

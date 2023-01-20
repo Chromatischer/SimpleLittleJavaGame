@@ -25,7 +25,7 @@ public class UI {
     /**
      * the inventory background image
      */
-    BufferedImage inv;
+    BufferedImage inv, invTop, invBottom, invLeft, invRight, invCornerLeftTop, invCornerRightTop, invCornerLeftBottom, invCornerRightBottom;
     /**
      * indicator for message
      */
@@ -62,8 +62,17 @@ public class UI {
     public UI(GamePanel gp){
         this.gp = gp;
         OBJKey key = new OBJKey();
+        String invTileMap = "/res/inv/inventory_tile_map.png";
         try {
-            inv = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/inv/inv.png")));
+            inv = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/inv/inv2.png")));
+            invRight = ImageManager.getTile(16,0,16,16,32,64,invTileMap);
+            invLeft = ImageManager.getTile(0,0,16,16,32,64,invTileMap);
+            invTop = ImageManager.getTile(16,16,16,16,32,64,invTileMap);
+            invBottom = ImageManager.getTile(0,16,16,16,32,64,invTileMap);
+            invCornerLeftBottom = ImageManager.getTile(0,48,16,16,32,64,invTileMap);
+            invCornerRightBottom = ImageManager.getTile(16,48,16,16,32,64,invTileMap);
+            invCornerLeftTop = ImageManager.getTile(0,32,16,16,32,64,invTileMap);
+            invCornerRightTop = ImageManager.getTile(16,32,16,16,32,64,invTileMap);
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -136,7 +145,23 @@ public class UI {
                 for (int y = 0; y < row; y++) {
                     for (int x = 0; x < col; x++) {
                         if (openInventory.getSize() > count) { //displaying correct amount of inv-slots
-                            g2.drawImage(inv, x * gp.TILESIZE + spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            if (x == 0 && y == 0){
+                                g2.drawImage(invCornerLeftTop, spaceX, spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            } else if (x == col-1 && y == 0){
+                                g2.drawImage(invCornerRightTop, x * gp.TILESIZE + spaceX, spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            } else if (y == row -1 && x == 0) {
+                                g2.drawImage(invCornerLeftBottom, spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            } else if (y == 0){
+                                g2.drawImage(invTop, x * gp.TILESIZE + spaceX, spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            } else if (x == 0){
+                                g2.drawImage(invLeft, spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            } else if (x == col -1){
+                                g2.drawImage(invRight, spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            } else if (y == row - 1) {
+                                g2.drawImage(invBottom, x * gp.TILESIZE + spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            } else {
+                                g2.drawImage(inv, x * gp.TILESIZE + spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            }
                             count++;
                         }
                         ItemStack current = openInventory.getItemstack(y*9 + x);
@@ -159,7 +184,7 @@ public class UI {
                     }
                 }
             } catch (NullPointerException e){
-                if(gp.DEBUG){System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that can not wait!");}
+                if(Main.DEBUG){System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that can not wait!");}
             }
         }
         //endregion
@@ -171,7 +196,7 @@ public class UI {
      */
     public void openInventory(Inventory inventory){
         if (openInventory == null){
-            if (gp.DEBUG){System.out.println("inventory: " + inventory.getType() + " now open");}
+            if (Main.DEBUG){System.out.println("inventory: " + inventory.getType() + " now open");}
             openInventory = inventory;
         }
     }
@@ -215,7 +240,7 @@ public class UI {
             fullHearts = (int) (health - 0.5);
             halfHearts = 1;
         }
-        if (gp.DEBUG){
+        if (Main.DEBUG){
             System.out.println("full hearts: " + fullHearts + " half hearts: " + halfHearts);
         }
         try {

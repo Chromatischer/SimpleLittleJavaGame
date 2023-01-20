@@ -1,11 +1,11 @@
 package tile;
 
 import main.GamePanel;
+import main.ImageManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.RasterFormatException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +73,7 @@ public class TileManager {
             for (int x = 0; x < tileMapImage.getWidth(); x+=16){
                 int tileNum = (y/16)*10 + (x/16);
                 tile [tileNum] = new Tile();
-                tile[tileNum].image = getTile(x,y,16,16, tileMapImage.getWidth(), tileMapImage.getHeight(), worldMap);
+                tile[tileNum].image = ImageManager.getTile(x,y,16,16, tileMapImage.getWidth(), tileMapImage.getHeight(), worldMap);
                 tile[tileNum].collision = collisions[x / 16][y / 16];
             }
         }
@@ -146,39 +146,5 @@ public class TileManager {
                 worldRow ++;
             }
         }
-    }
-
-    /**
-     * gets a specified partial image from a larger image
-     * like a sprite from a spritemap
-     *
-     * @param x the x position of the subimage to get
-     * @param y the y position of the subimage to get
-     * @param sizeX the width of the subimage to get
-     * @param sizeY the height of the subimage to get
-     * @param imgX the total width of the subimage to get
-     * @param imgY the total height of the subimage to get
-     * @param tileMapLocation the location of the image as a String
-     * @return the defined subimage if possible else: null
-     */
-    public BufferedImage getTile(int x, int y, int sizeX, int sizeY, int imgX, int imgY, String tileMapLocation){
-        BufferedImage image = null;
-        try {
-        image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(tileMapLocation)));
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-        assert image != null;
-        try{
-            if (x < 0 || y < 0 || imgX < 0 || imgY < 0 || sizeX < 0 || sizeY < 0){ //checking valid parameters
-                return null;
-            }
-            if ((x * sizeX + sizeX < imgX) || (y * sizeY + sizeY < imgY)){
-                return image.getSubimage(x, y, sizeX, sizeY);
-            }
-        } catch (RasterFormatException e){
-            System.out.println(e.getMessage());
-        }
-        return null;
     }
 }
