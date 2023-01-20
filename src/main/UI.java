@@ -85,6 +85,7 @@ public class UI {
     public void draw(@NotNull Graphics2D g2){ //dont initiate things here!
         g2.setFont(ariel_40);
         g2.setColor(Color.WHITE);
+        //region key draw methode
         if (gp.player.hasKey <= 3) {
             for (int i = 0; i < gp.player.hasKey; i++){
                 g2.drawImage(keyIMG, gp.TILESIZE / 2, gp.TILESIZE / 2 + i * 9, gp.TILESIZE, gp.TILESIZE, null);
@@ -95,6 +96,8 @@ public class UI {
             }
             g2.drawString("+" + gp.player.hasKey, 75, 75); //TODO: make position adaptable
         }
+        //endregion
+        //region heart draw methode
         int heartcol = 10; //amount of hearts in one line
         int heartrow = (int) Math.ceil(fullHearts / (double) heartcol); //amount of rows (round up)
         int heartcount = 0;
@@ -111,6 +114,8 @@ public class UI {
                 }
             }
         }
+        //endregion
+        //region inventory draw methode
         if (openInventory == null) {
             if (messageON) {
                 //g2.setFont(g2.getFont().deriveFont(30F)); //this is how to change font size on the fly
@@ -157,6 +162,7 @@ public class UI {
                 if(gp.DEBUG){System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that can not wait!");}
             }
         }
+        //endregion
     }
 
     /**
