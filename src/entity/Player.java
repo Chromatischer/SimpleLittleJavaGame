@@ -1,5 +1,9 @@
 package entity;
 
+import inventory.INVENTORY_TYPE;
+import inventory.Inventory;
+import items.ITEM_TYPE;
+import items.ItemStack;
 import main.GamePanel;
 import main.KeyManager;
 import main.UI;
@@ -13,6 +17,13 @@ public class Player extends Entity {
     KeyManager keyH;
 
     public int hasKey = 0;
+
+    /**
+     * main player constructor
+     * @param gp the main game panel
+     * @param keyH the keyInputs to receive
+     * @param ui the ui to use
+     */
     public Player(GamePanel gp, KeyManager keyH, UI ui){
         this.gp = gp;
         this.keyH = keyH;
@@ -30,7 +41,10 @@ public class Player extends Entity {
      * sets the standard values
      */
     public void setDefaultValues(){
+        inventory = new Inventory(27, INVENTORY_TYPE.PLAYER);
         System.out.println("opening inventory");
+        inventory.addItemStack(new ItemStack(ITEM_TYPE.KEY, 1));
+        System.out.println(inventory.getAllTypesAsSting());
         ui.openInventory(inventory);
         //starting point on the map
         worldX = 50*gp.TILESIZE;
@@ -85,6 +99,11 @@ public class Player extends Entity {
             if (keyH.rightPressed){
                 moveX(false, this, true);
             }
+            if (keyH.inventoryPressed){
+                ui.openInventory(inventory);
+            } else {
+                ui.closeInventory(inventory);
+            }
         }
 
         if (idleUpdates >= 5){
@@ -98,6 +117,10 @@ public class Player extends Entity {
         screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
     }
 
+    /**
+     * the main draw methode of the player
+     * @param g2 the graphics to draw on
+     */
     public void draw(Graphics2D g2){
         if (Objects.equals(getDirection(), "up")){
 

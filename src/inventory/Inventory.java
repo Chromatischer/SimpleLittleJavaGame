@@ -1,5 +1,6 @@
-package main;
+package inventory;
 
+import items.ITEM_TYPE;
 import items.ItemStack;
 
 import java.util.ArrayList;
@@ -14,12 +15,12 @@ public class Inventory {
     /**
      * type of inventory e.g: player, chest
      */
-    String type;
-    public Inventory(int size, String type){
-        this.type = type;
+    INVENTORY_TYPE invType;
+    public Inventory(int size, INVENTORY_TYPE invType){
+        this.invType = invType;
         itemStacks = new ItemStack[size];
         for (int i = 0; i < itemStacks.length; i++) {
-            itemStacks[i] = new ItemStack("air", 0);
+            itemStacks[i] = new ItemStack(ITEM_TYPE.AIR, 0);
         }
     }
 
@@ -38,7 +39,7 @@ public class Inventory {
      */
     public void addItemStack(ItemStack itemStack){
         for (int i = 0; i < itemStacks.length; i++) {
-            if (itemStacks[i].getType().equals("air") && itemStacks[i].getStackSize() == 0){
+            if (itemStacks[i].getType().equals(ITEM_TYPE.AIR) && itemStacks[i].getStackSize() == 0){
                 itemStacks[i] = itemStack;
                 break;
             }
@@ -65,7 +66,7 @@ public class Inventory {
         List<ItemStack> buffer = new ArrayList<>();
         //copying all not dummy items into new list
         for (ItemStack itemStack : itemStacks) {
-            if (!itemStack.getType().equals("air") && itemStack.getStackSize() != 0) {
+            if (!itemStack.getType().equals(ITEM_TYPE.AIR) && itemStack.getStackSize() != 0) {
                 buffer.add(itemStack);
             }
         }
@@ -77,7 +78,7 @@ public class Inventory {
         //filling all now null spaces with dummy items
         for (int i = 0; i < itemStacks.length; i++){
             if (itemStacks[i] == null){
-                itemStacks[i] = new ItemStack("air", 0);
+                itemStacks[i] = new ItemStack(ITEM_TYPE.AIR, 0);
             }
         }
     }
@@ -119,7 +120,7 @@ public class Inventory {
      * gets the type of inventory
      * @return the inventory type
      */
-    public String getType(){
-        return type;
+    public INVENTORY_TYPE getType(){
+        return invType;
     }
 }

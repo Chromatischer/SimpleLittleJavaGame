@@ -1,7 +1,7 @@
 package main;
 import java.awt.event.*;
 public class KeyManager implements KeyListener{
-    public boolean upPressed, downPressed, leftPressed, rightPressed, nonePressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, nonePressed, inventoryPressed;
 
     @Override
     public void keyTyped(KeyEvent e) {} //not used
@@ -22,6 +22,9 @@ public class KeyManager implements KeyListener{
         }
         if (code == KeyEvent.VK_D){
             rightPressed = true;
+        }
+        if (code == KeyEvent.VK_E){
+            inventoryPressed =! inventoryPressed;
         }
     }
 

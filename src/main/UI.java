@@ -1,5 +1,8 @@
 package main;
 
+import inventory.Inventory;
+import items.ITEM_TYPE;
+import items.ItemStack;
 import main.object.OBJKey;
 
 import javax.imageio.ImageIO;
@@ -10,12 +13,37 @@ import java.util.Objects;
 
 public class UI {
     GamePanel gp;
+    /**
+     * the main font to use!
+     */
     Font ariel_40 = new Font("Arial", Font.BOLD, 30); //TODO: make font size adaptable
-    BufferedImage keyIMG;
+    /**
+     * font for small description e.g: item amounts
+     */
+    Font ariel_10 = new Font("Arial", Font.PLAIN, 20);
+    /**
+     * the image for the KEY ui
+     */
+    BufferedImage keyIMG; //TODO: remove when completely changed to inventory display
+    /**
+     * the inventory background image
+     */
     BufferedImage inv;
+    /**
+     * indicator for message
+     */
     public boolean messageON = false;
+    /**
+     * the message to be displayed
+     */
     public String message = "";
+    /**
+     * the amount of frames the message was already displayed for
+     */
     int messageFrames = 0;
+    /**
+     * the currently open inventory if non set to null
+     */
     Inventory openInventory = null;
     public UI(GamePanel gp){
         this.gp = gp;
@@ -64,15 +92,29 @@ public class UI {
                 messageFrames = 0;
             }
         } else {
-            int col = 9;
-            int count = 0;
-            for (int y = 0; y < Math.ceil(openInventory.getSize() / (double) col); y++){
-                for (int x = 0; x < col; x ++){
-                    if (openInventory.getSize() > count) {
-                        g2.drawImage(inv, x * gp.TILESIZE, y * gp.TILESIZE, gp.TILESIZE, gp.TILESIZE, null);
-                        count ++;
+            try {
+                int col = 9; //amount of slots in one line
+                int row = (int) Math.ceil(openInventory.getSize() / (double) col); //amount of rows (round up)
+                int count = 0; //used for displaying correct number of slots
+                int spaceX = (gp.getWidth() - (col * gp.TILESIZE)) / 2; //pixel to center inv
+                int spaceY = (gp.getHeight() - (row * gp.TILESIZE)) / 2; //pixels to center inv
+                for (int y = 0; y < row; y++) {
+                    for (int x = 0; x < col; x++) {
+                        if (openInventory.getSize() > count) { //displaying correct amount of inv-slots
+                            g2.drawImage(inv, x * gp.TILESIZE + spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            ItemStack current = openInventory.getItemstack(y + x);
+                            if (current.getType() != ITEM_TYPE.AIR) {
+                                g2.drawImage(current.getImage(), x * gp.TILESIZE + spaceX + (gp.TILESIZE / 16), y * gp.TILESIZE + spaceY + (gp.TILESIZE / 16), (gp.TILESIZE - gp.TILESIZE / 8), (gp.TILESIZE - gp.TILESIZE / 8), null); //drawing the item in the correct slot
+                                g2.setFont(ariel_10);
+                                String stackAmount = String.valueOf(current.getStackSize());
+                                //g2.drawString(stackAmount, x*gp.TILESIZE, y * gp.TILESIZE);
+                            }
+                            count++;
+                        }
                     }
                 }
+            } catch (NullPointerException e){
+                System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that can not wait!");
             }
         }
     }
@@ -82,9 +124,8 @@ public class UI {
      * @param inventory the inventory to open!
      */
     public void openInventory(Inventory inventory){
-        System.out.println(openInventory);
         if (openInventory == null){
-            System.out.println("inventory: " + inventory.getType() + " now open");
+            if (gp.DEBUG){System.out.println("inventory: " + inventory.getType() + " now open");}
             openInventory = inventory;
         }
     }
