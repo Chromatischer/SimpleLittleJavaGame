@@ -12,8 +12,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
+import static main.Main.DEBUG;
+
 public class UI {
     GamePanel gp;
+    MouseClickManager clickManager;
     /**
      * the main font to use!
      */
@@ -30,6 +33,10 @@ public class UI {
      * indicator for message
      */
     public boolean messageON = false;
+
+    int lastX = 0;
+    int lastY = 0;
+
     /**
      * the message to be displayed
      */
@@ -42,6 +49,10 @@ public class UI {
      * the currently open inventory if non set to null
      */
     Inventory openInventory = null;
+    /**
+     * the item stack currently in hand if non: null
+     */
+    ItemStack itemStackInHand = null;
     /**
      * the amount of full hearts to render
      */
@@ -59,10 +70,12 @@ public class UI {
      */
     BufferedImage fullHeartImg, halfHeartImg;
 
-    public UI(GamePanel gp){
+    public UI(GamePanel gp, MouseClickManager clickManager){
         this.gp = gp;
+        this.clickManager = clickManager;
         OBJKey key = new OBJKey();
         String invTileMap = "/res/inv/inventory_tile_map.png";
+        System.out.println("reading images for UI!");
         try {
             inv = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/inv/inv2.png")));
             invRight = ImageManager.getTile(16,0,16,16,32,64,invTileMap);
@@ -73,6 +86,7 @@ public class UI {
             invCornerRightBottom = ImageManager.getTile(16,48,16,16,32,64,invTileMap);
             invCornerLeftTop = ImageManager.getTile(0,32,16,16,32,64,invTileMap);
             invCornerRightTop = ImageManager.getTile(16,32,16,16,32,64,invTileMap);
+            System.out.println("reading images for UI: DONE");
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -151,12 +165,14 @@ public class UI {
                                 g2.drawImage(invCornerRightTop, x * gp.TILESIZE + spaceX, spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
                             } else if (y == row -1 && x == 0) {
                                 g2.drawImage(invCornerLeftBottom, spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                            } else if (y == row -1 && x == col -1){
+                                g2.drawImage(invCornerRightBottom, x * gp.TILESIZE + spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
                             } else if (y == 0){
                                 g2.drawImage(invTop, x * gp.TILESIZE + spaceX, spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
                             } else if (x == 0){
                                 g2.drawImage(invLeft, spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
                             } else if (x == col -1){
-                                g2.drawImage(invRight, spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
+                                g2.drawImage(invRight, x * gp.TILESIZE + spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
                             } else if (y == row - 1) {
                                 g2.drawImage(invBottom, x * gp.TILESIZE + spaceX, y * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE, null); //drawing the tiles
                             } else {
@@ -180,11 +196,16 @@ public class UI {
                             int textY = (y * gp.TILESIZE + spaceY + gp.TILESIZE) - ((int) g2.getFontMetrics().getStringBounds(stackAmount, g2).getHeight()/6) - (gp.TILESIZE/13);
                             g2.drawString(stackAmount, textX, textY);
                         }
-
+                        getClickedItemSlot();
+                        g2.setColor(Color.RED);
+                        g2.drawOval(lastX, lastY, 10, 10);
+                        g2.setColor(Color.GREEN);
+                        g2.drawRect(lastX, lastY, 10, 10);
+                        g2.setColor(Color.WHITE);
                     }
                 }
             } catch (NullPointerException e){
-                if(Main.DEBUG){System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that can not wait!");}
+                if(DEBUG){System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that can not wait!");}
             }
         }
         //endregion
@@ -196,7 +217,7 @@ public class UI {
      */
     public void openInventory(Inventory inventory){
         if (openInventory == null){
-            if (Main.DEBUG){System.out.println("inventory: " + inventory.getType() + " now open");}
+            if (DEBUG){System.out.println("inventory: " + inventory.getType() + " now open");}
             openInventory = inventory;
         }
     }
@@ -240,14 +261,14 @@ public class UI {
             fullHearts = (int) (health - 0.5);
             halfHearts = 1;
         }
-        if (Main.DEBUG){
+        if (DEBUG){
             System.out.println("full hearts: " + fullHearts + " half hearts: " + halfHearts);
         }
         try {
             switch (effect){
                 case NORMAL -> {
-                    halfHeartImg = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/inv/inv.png")));
-                    fullHeartImg = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/object/key.png")));
+                    halfHeartImg = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/ui/half_heart.png")));
+                    fullHeartImg = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/ui/full_heart.png")));
                 }
                 case OTHER -> {
 
@@ -255,6 +276,27 @@ public class UI {
             }
         } catch (IOException e){
             e.printStackTrace();
+        }
+    }
+
+    private void renderItemstackInHand(ItemStack itemStack){
+        if (itemStack != itemStackInHand){
+            if (itemStackInHand == null){
+                itemStackInHand = itemStack;
+            }
+        }
+    }
+    private ItemStack getItemStackInHand(){
+        return itemStackInHand;
+    }
+    private void getClickedItemSlot(){
+
+        boolean lastClicked = false;
+        if (clickManager.mouseX != lastX || clickManager.mouseY != lastY || clickManager.mouseClicked != lastClicked) {
+            if(DEBUG){System.out.println(clickManager.mouseX + ":" + clickManager.mouseY + ":" + clickManager.mouseClicked);}
+            lastY = clickManager.mouseY;
+            lastX = clickManager.mouseX;
+            lastClicked = clickManager.mouseClicked;
         }
     }
 }

@@ -32,8 +32,8 @@ public class GamePanel extends JPanel implements Runnable {
     MouseClickManager mouseKM = new MouseClickManager();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public ObjectManager objManager = new ObjectManager(this);
-    public UI ui = new UI(this);
-    public Player player = new Player(this, keyH,mouseKM, ui);
+    public UI ui = new UI(this, mouseKM);
+    public Player player = new Player(this, keyH, mouseKM, ui);
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
 
     //WORLD SETTINGS:
@@ -49,6 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
         setBackground(ColorUIResource.BLACK);
         setDoubleBuffered(true); //I acturally dont fucking know what this does! It is supposed to help though
         addKeyListener(keyH); //adding the key listener
+        addMouseListener(mouseKM);
         setFocusable(true); //used for catching userinputs
         System.out.println("gamepanel set up!");
     }
