@@ -15,6 +15,7 @@ import java.util.Objects;
 public class Player extends Entity {
     KeyManager keyH;
     MouseClickManager mouseKM;
+    MouseMoveListener moveListener;
 
     public int hasKey = 0;
 
@@ -24,11 +25,12 @@ public class Player extends Entity {
      * @param keyH the keyInputs to receive
      * @param ui the ui to use
      */
-    public Player(@NotNull GamePanel gp, KeyManager keyH, MouseClickManager mouseKM, UI ui){
+    public Player(@NotNull GamePanel gp, KeyManager keyH, MouseClickManager mouseKM, MouseMoveListener moveListener, UI ui){
         this.gp = gp;
         this.keyH = keyH;
         this.ui = ui;
         this.mouseKM = mouseKM;
+        this.moveListener = moveListener;
         screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
         screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
         solidArea = new Rectangle(8, 16, 32, 32); //TODO: make adaptable to current TileSize!
@@ -45,11 +47,6 @@ public class Player extends Entity {
         maxHealth = 11.5;
         health = maxHealth;
         inventory = new Inventory(27, INVENTORY_TYPE.PLAYER);
-        ItemStack key2000 = new ItemStack(ITEM_TYPE.KEY, 2000);
-        inventory.addItemStack(key2000);
-        inventory.setItemStack(new ItemStack(ITEM_TYPE.KEY, 2), 2);
-        inventory.moveItemstack(inventory.getLocation(key2000), 2);
-        ui.openInventory(inventory);
         ui.drawHealth(health, HEALTH_EFFECTS.NORMAL);
         //starting point on the map
         worldX = 50*gp.TILESIZE;
@@ -157,14 +154,13 @@ public class Player extends Entity {
         if (index != 999){ //not no object
             switch (gp.obj[index].name) {
                 case "Key":
-                    hasKey++;
+                    inventory.addItemStack(new ItemStack(ITEM_TYPE.KEY, 1));
                     gp.obj[index] = null;
                     gp.ui.showMessage("you have picked up a key!");
                     break;
                 case "Chest":
-                    if (hasKey > 0) {
+                    if (inventory.subtractItemstack(new ItemStack(ITEM_TYPE.KEY, 1))){
                         gp.obj[index] = null;
-                        hasKey --;
                     }
                     break;
                 case "Door":

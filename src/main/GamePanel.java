@@ -26,14 +26,20 @@ public class GamePanel extends JPanel implements Runnable {
     public final int SCREENHEIGHT = MAXSCREENROW * TILESIZE; //576px
     JFrame mainFrame2;
 
+    public String percentUI = "";
+    public String percentPlayer = "";
+    public String percentTiles = "";
+    public String percentObjects = "";
+    public float deltaDraw = 0F;
     TileManager tileM = new TileManager(this);
     Thread gameThread;
     KeyManager keyH = new KeyManager();
     MouseClickManager mouseKM = new MouseClickManager();
+    MouseMoveListener mouseML = new MouseMoveListener();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public ObjectManager objManager = new ObjectManager(this);
-    public UI ui = new UI(this, mouseKM);
-    public Player player = new Player(this, keyH, mouseKM, ui);
+    public UI ui = new UI(this, mouseKM, mouseML);
+    public Player player = new Player(this, keyH, mouseKM, mouseML, ui);
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
 
     //WORLD SETTINGS:
@@ -50,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
         setDoubleBuffered(true); //I acturally dont fucking know what this does! It is supposed to help though
         addKeyListener(keyH); //adding the key listener
         addMouseListener(mouseKM);
+        addMouseMotionListener(mouseML);
         setFocusable(true); //used for catching userinputs
         System.out.println("gamepanel set up!");
     }
@@ -121,21 +128,44 @@ public class GamePanel extends JPanel implements Runnable {
     long result = 0;
     public void paintComponent(Graphics g){
         //DEBUG
-        long drawStart;
-        drawStart = System.nanoTime();
+        long drawStart = System.nanoTime();
 
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        //region tile
+        long drawTile = System.nanoTime();
         tileM.draw(g2); //make sure to draw the tileMap first cause otherwise the map will layer on top of the player!
+        long drawTileEnd = System.nanoTime();
+        //endregion
+        //region objects
+        long drawObjects = System.nanoTime();
         for (SuperObject superObject : obj) {
             if (superObject != null) {
                 superObject.draw(g2, this);
             }
         }
+        long drawObjectsEnd = System.nanoTime();
+        //endregion
+        //region player
+        long drawPlayer = System.nanoTime();
         player.draw(g2);
+        long drawPlayerEnd = System.nanoTime();
+        //endregion
+        //region ui
+        long drawUI = System.nanoTime();
         ui.draw(g2);
+        long drawUIEnd = System.nanoTime();
+        //endregion
+        //region calculations
+        long drawEnd = System.nanoTime();
+        deltaDraw = drawEnd - drawStart;
+        percentUI = "UI: " + String.format("%.0f",(drawUIEnd - drawUI) / deltaDraw*100) + "%";
+        percentObjects = "Objects: " + String.format("%.0f",(drawObjectsEnd - drawObjects) / deltaDraw*100) + "%";
+        percentTiles = "Tiles: " + String.format("%.0f",(drawTileEnd - drawTile) / deltaDraw*100) + "%";
+        percentPlayer = "Player: " + String.format("%.0f",(drawPlayerEnd - drawPlayer) / deltaDraw*100) + "%";
+        //endregion
+        //region avrgDrawTime
         if (cycles < avrgLenght) {
-            long drawEnd = System.nanoTime();
             passedTimes[cycles] = drawEnd - drawStart;
             cycles ++;
         } else {
@@ -149,8 +179,10 @@ public class GamePanel extends JPanel implements Runnable {
             if (DEBUG) {
                 System.out.println(avrgLenght + " drawtimes took: " + result + "ns on average!");
                 System.out.println("that is: " + (double) Math.round(result / 100_0F) / 100 + "ms");
+                System.out.println(percentUI + " " + percentObjects + " " + percentTiles + " " + percentPlayer);
             }
         }
+        //endregion
         g2.dispose(); //disposes of the recource it is using
     }
 }

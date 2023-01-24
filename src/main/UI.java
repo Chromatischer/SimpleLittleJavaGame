@@ -17,6 +17,7 @@ import static main.Main.DEBUG;
 public class UI {
     GamePanel gp;
     MouseClickManager clickManager;
+    MouseMoveListener moveListener;
     /**
      * the main font to use!
      */
@@ -38,6 +39,14 @@ public class UI {
     int lastY = 0;
     int clickedY = 0;
     int clickedX = 0;
+    boolean lastClicked = false;
+    int pauseframes = 0;
+    int noDebugDrawFrame = 20;
+    String percentObjects = "";
+    String percentPlayer = "";
+    String percentTiles = "";
+    String percentUI = "";
+    String drawTime = "";
     int spaceX = 0;
     int spaceY = 0;
     int col = 9; //amount of slots in one line
@@ -75,10 +84,12 @@ public class UI {
      * images to use for the hearts
      */
     BufferedImage fullHeartImg, halfHeartImg;
+    BufferedImage imageInHand = null;
 
-    public UI(GamePanel gp, MouseClickManager clickManager) {
+    public UI(GamePanel gp, MouseClickManager clickManager, MouseMoveListener moveListener) {
         this.gp = gp;
         this.clickManager = clickManager;
+        this.moveListener = moveListener;
         OBJKey key = new OBJKey();
         String invTileMap = "/res/inv/inventory_tile_map.png";
         System.out.println("reading images for UI!");
@@ -202,21 +213,72 @@ public class UI {
                             int textY = (y * gp.TILESIZE + spaceY + gp.TILESIZE) - ((int) g2.getFontMetrics().getStringBounds(stackAmount, g2).getHeight() / 6) - (gp.TILESIZE / 13);
                             g2.drawString(stackAmount, textX, textY);
                         }
-                        getClickedItemSlot();
-                        g2.setColor(Color.RED);
-                        g2.drawOval(lastX, lastY, 10, 10);
-                        g2.setColor(Color.GREEN);
-
-                        g2.drawRect(clickedX * gp.TILESIZE + spaceX, clickedY * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE);
-                        g2.setColor(Color.WHITE);
                     }
                 }
-            } catch (NullPointerException e) {
-                System.out.println("nullERROR");
+
+                //region render itemstack in hand
+                if (itemStackInHand != null){
+                    g2.drawImage(imageInHand, moveListener.locationX - gp.TILESIZE /2, moveListener.locationY - gp.TILESIZE /2, gp.TILESIZE, gp.TILESIZE, null);
+                }
+                //endregion
+                //region debugIcons
                 if (DEBUG) {
-                    System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that can not wait!");
+                    g2.setColor(Color.RED);
+                    g2.drawOval(lastX, lastY, 10, 10);
+                    g2.setColor(Color.GREEN);
+                    g2.drawRect(clickedX * gp.TILESIZE + spaceX, clickedY * gp.TILESIZE + spaceY, gp.TILESIZE, gp.TILESIZE);
+                    g2.setColor(Color.ORANGE);
+                    g2.drawOval(moveListener.locationX, moveListener.locationY, 10, 10);
+                    g2.setColor(Color.WHITE);
+                }
+                //endregion
+                getClickedItemSlot();
+                //region move items
+                if (lastClicked) {
+                    if (pauseframes > 10) {
+                        if (itemStackInHand == null) {
+                            if (openInventory.getItemstack(clickedY * col + clickedX).getType() != ITEM_TYPE.AIR) {
+                                imageInHand = openInventory.getItemstack(clickedY*col + clickedX).getImage();
+                                itemStackInHand = openInventory.getItemstack(clickedY * col + clickedX);
+                                openInventory.setItemStack(new ItemStack(ITEM_TYPE.AIR, 0), clickedY * col + clickedX);
+                            }
+                        } else {
+                            if (openInventory.getItemstack(clickedY * col + clickedX).getType() == ITEM_TYPE.AIR) {
+                                openInventory.setItemStack(itemStackInHand, clickedY * col + clickedX);
+                                itemStackInHand = null;
+                            }
+                        }
+                        pauseframes = 0;
+                    }
+                    lastClicked = !lastClicked;
+                }
+                pauseframes ++;
+                //endregion
+            } catch (NullPointerException e) {
+                if (DEBUG) {
+                    System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that cannot wait!");
                 }
             }
+        }
+        //endregion
+        //region debug draw methode
+        if (DEBUG){
+            if (noDebugDrawFrame > 20) {
+                percentObjects = gp.percentObjects;
+                percentPlayer = gp.percentPlayer;
+                percentTiles = gp.percentTiles;
+                percentUI = gp.percentUI;
+                drawTime = "Time: " + (double) Math.round(gp.deltaDraw / 100_0F) / 100 + "ms";
+                noDebugDrawFrame = 0;
+            }
+            noDebugDrawFrame ++;
+            g2.setFont(g2.getFont().deriveFont(15F));
+            g2.drawString(drawTime, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(drawTime, g2).getWidth()), Math.round(gp.getSize().getHeight() - 5 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(percentObjects, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentObjects, g2).getWidth()), Math.round(gp.getSize().getHeight() - 4 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(percentPlayer, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentPlayer, g2).getWidth()), Math.round(gp.getSize().getHeight() - 3 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(percentTiles, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentTiles, g2).getWidth()), Math.round(gp.getSize().getHeight() - 2 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(percentUI, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentUI, g2).getWidth()), Math.round(gp.getSize().getHeight() - 1 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+
         }
         //endregion
     }
@@ -295,43 +357,31 @@ public class UI {
         }
     }
 
-    private void renderItemstackInHand(ItemStack itemStack) {
-        if (itemStack != itemStackInHand) {
-            if (itemStackInHand == null) {
-                itemStackInHand = itemStack;
-            }
-        }
-    }
-
     private ItemStack getItemStackInHand() {
         return itemStackInHand;
     }
 
+    /**
+     * gets the currently clicked Itemslot and saves it to rhe clickedX and clickedY values!
+     */
     private void getClickedItemSlot() {
-
-        boolean lastClicked = false;
-        if (clickManager.mouseX != lastX || clickManager.mouseY != lastY || clickManager.mouseClicked != lastClicked) {
-            if (DEBUG) System.out.println(clickManager.mouseX + ":" + clickManager.mouseY + ":" + clickManager.mouseClicked);
+        if ((clickManager.mouseX != lastX || clickManager.mouseY != lastY || clickManager.mouseClicked != lastClicked) && !(clickManager.mouseY > spaceY + row * gp.TILESIZE) && !(clickManager.mouseX > spaceX + col * gp.TILESIZE) && !(clickManager.mouseY < spaceY) && !(clickManager.mouseX < spaceX)) {
+            lastClicked = true;
             lastY = clickManager.mouseY;
             lastX = clickManager.mouseX;
-            lastClicked = clickManager.mouseClicked;
-            System.out.println("test");
             for (int i = spaceY; i < row * gp.TILESIZE + spaceY; i += gp.TILESIZE) {
-                System.out.println(lastY + " " + spaceY + " " + (i + gp.TILESIZE));
-                System.out.println((i < lastY) + " " + (i + gp.TILESIZE > lastY) + " " + (i - spaceY));
                 if (i < lastY && i + gp.TILESIZE > lastY) {
                     clickedY = (i - spaceY) / gp.TILESIZE;
-                    System.out.println("y" + clickedY + " " + row);
                     break;
                 }
             }
             for (int i = spaceX; i < col * gp.TILESIZE + spaceX; i += gp.TILESIZE) {
                 if (i < lastX && i + gp.TILESIZE > lastX) {
                     clickedX = (i - spaceX) / gp.TILESIZE;
-                    System.out.println("x " + clickedX + " " + col);
                     break;
                 }
             }
+            if (DEBUG) System.out.println(clickManager.mouseX + ":" + clickManager.mouseY + ":" + clickManager.mouseClicked);
         }
     }
 }

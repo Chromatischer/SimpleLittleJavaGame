@@ -52,6 +52,26 @@ public class Inventory {
     }
 
     /**
+     * substracts the itemstack from the first itemstack if possible
+     * @param itemStack the itemstack to substract with
+     * @return wheter the operation was successfull
+     */
+    public boolean subtractItemstack(ItemStack itemStack){
+        for (ItemStack stack : itemStacks) {
+            if (stack.getType() == itemStack.getType() && stack.getStackSize() - itemStack.getStackSize() > 0) {
+                int oldStackSize = stack.getStackSize();
+                int newStackSize = oldStackSize - itemStack.getStackSize();
+                stack.setStackSize(newStackSize);
+                if (newStackSize <= 0) {
+                    stack.setType(ITEM_TYPE.AIR);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * sets the itemstack at a given position for the inventory
      * @param itemStack the itemstack to set
      * @param place the slot to put the itemstack in
