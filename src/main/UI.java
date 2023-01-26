@@ -222,7 +222,7 @@ public class UI {
                 }
                 //endregion
                 //region debugIcons
-                if (DEBUG) {
+                if (DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()) {
                     g2.setColor(Color.RED);
                     g2.drawOval(lastX, lastY, 10, 10);
                     g2.setColor(Color.GREEN);
@@ -255,14 +255,12 @@ public class UI {
                 pauseframes ++;
                 //endregion
             } catch (NullPointerException e) {
-                if (DEBUG) {
-                    System.out.println("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that cannot wait!");
-                }
+                Logger.log("null-pointer in ui class: '" + e.initCause(null) + "' that is sad but not a problem that cannot wait!", MESSAGE_PRIO.FAILED);
             }
         }
         //endregion
         //region debug draw methode
-        if (DEBUG){
+        if (DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()){
             if (noDebugDrawFrame > 20) {
                 percentObjects = gp.percentObjects;
                 percentPlayer = gp.percentPlayer;
@@ -290,9 +288,7 @@ public class UI {
      */
     public void openInventory(Inventory inventory) {
         if (openInventory == null) {
-            if (DEBUG) {
-                System.out.println("inventory: " + inventory.getType() + " now open");
-            }
+            Logger.log("inventory: " + inventory.getType() + " now open", MESSAGE_PRIO.FINER);
             openInventory = inventory;
         }
     }
@@ -339,9 +335,7 @@ public class UI {
             fullHearts = (int) (health - 0.5);
             halfHearts = 1;
         }
-        if (DEBUG) {
-            System.out.println("full hearts: " + fullHearts + " half hearts: " + halfHearts);
-        }
+        Logger.log("full hearts: " + fullHearts + " half hearts: " + halfHearts, MESSAGE_PRIO.FINER);
         try {
             switch (effect) {
                 case NORMAL -> {
@@ -381,7 +375,7 @@ public class UI {
                     break;
                 }
             }
-            if (DEBUG) System.out.println(clickManager.mouseX + ":" + clickManager.mouseY + ":" + clickManager.mouseClicked);
+            Logger.log(clickManager.mouseX + ":" + clickManager.mouseY + ":" + clickManager.mouseClicked, MESSAGE_PRIO.FINER);
         }
     }
 }

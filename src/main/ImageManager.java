@@ -22,40 +22,38 @@ public class ImageManager {
      */
     public static BufferedImage getTile(int x, int y, int sizeX, int sizeY, int imgX, int imgY, String tileMapLocation){
         BufferedImage nullImg = null;
-        if(Main.DEBUG){System.out.println("reading file: " + tileMapLocation);}
+        Logger.log("reading file: " + tileMapLocation, MESSAGE_PRIO.DEBUG);
         BufferedImage image = null;
         try {
             image = ImageIO.read(Objects.requireNonNull(ImageManager.class.getResourceAsStream(tileMapLocation)));
             nullImg = ImageIO.read(Objects.requireNonNull(ImageManager.class.getResourceAsStream("/res/missing_texture.png")));
         } catch (IOException e){
-            System.out.println("reading file: " + tileMapLocation + ": FAILED!");
-            System.out.println(e.getMessage());
+            Logger.log("reading file: " + tileMapLocation + ": FAILED!", MESSAGE_PRIO.ERROR);
+            Logger.log(e.getMessage(), MESSAGE_PRIO.ERROR);
         }
         assert image != null;
         assert nullImg != null;
         try{
             if (x < 0 || y < 0 || imgX < 0 || imgY < 0 || sizeX < 0 || sizeY < 0){ //checking valid parameters
-                System.out.println("reading file: " + tileMapLocation + ": FAILED!");
-                System.out.println("cause: one value smaller 0!");
+                Logger.log("reading file: " + tileMapLocation + ": FAILED!", MESSAGE_PRIO.FAILED);
+                Logger.log("cause: one value smaller 0!", MESSAGE_PRIO.FAILED);
                 return nullImg;
             }
             if ((x + sizeX <= imgX) || (y + sizeY <= imgY)){
-                if(Main.DEBUG){System.out.println("reading file: " + tileMapLocation + ": SUCCESSFULL!");}
+                Logger.log("reading file: " + tileMapLocation + ": SUCCESSFULL!", MESSAGE_PRIO.DEBUG);
                 return image.getSubimage(x, y, sizeX, sizeY);
             }
         } catch (RasterFormatException e){
-            System.out.println("reading file: " + tileMapLocation + ": FAILED!");
-            System.out.println(e.getMessage());
+            Logger.log("reading file: " + tileMapLocation + ": FAILED!", MESSAGE_PRIO.ERROR);
+            Logger.log(e.getMessage(), MESSAGE_PRIO.ERROR);
         }
-        System.out.println("reading file: " + tileMapLocation + ": FAILED!");
-        System.out.println("cause: unknown");
-        if (Main.DEBUG){
-            System.out.println("debug values:");
-            System.out.println("x: " + x + " y: " + y + " imgX: " + imgX + " imgY: " + imgY + " sizeX: " + sizeX + " sizeY: " + sizeY +
-                               " w: " + image.getWidth() + " h: " + image.getHeight() + " xCalc: " + (x * sizeX + sizeX) + " yCalc: " + (y * sizeY + sizeY) +
-                               " xCalcB: " + (x * sizeX + sizeX < imgX) + " yCalcB: " + (y * sizeY + sizeY < imgY));
-            System.out.println("---------------------------");
-        }
+        Logger.log("reading file: " + tileMapLocation + ": FAILED!", MESSAGE_PRIO.ERROR);
+        Logger.log("cause: unknown", MESSAGE_PRIO.ERROR);
+        Logger.log("debug values:", MESSAGE_PRIO.ERROR);
+        Logger.log("x: " + x + " y: " + y + " imgX: " + imgX + " imgY: " + imgY + " sizeX: " + sizeX + " sizeY: " + sizeY +
+                           " w: " + image.getWidth() + " h: " + image.getHeight() + " xCalc: " + (x * sizeX + sizeX) + " yCalc: " + (y * sizeY + sizeY) +
+                           " xCalcB: " + (x * sizeX + sizeX < imgX) + " yCalcB: " + (y * sizeY + sizeY < imgY), MESSAGE_PRIO.ERROR);
+        Logger.log("---------------------------", MESSAGE_PRIO.ERROR);
         return nullImg;
     }
 }

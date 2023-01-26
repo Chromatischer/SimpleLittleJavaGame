@@ -5,17 +5,13 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.DimensionUIResource;
 
 import entity.Player;
+import environment.EnvironmentManager;
 import main.object.SuperObject;
 import tile.TileManager;
 
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    /**
-     * everything that is debug related should only be displayed when this boolean is set to true!
-     */
-    public final boolean DEBUG = Main.DEBUG;
-
     //SCREEN SETTINGS
     final int ORIGINALTILESIZE = 16;
     int SCALE = 3;
@@ -30,6 +26,7 @@ public class GamePanel extends JPanel implements Runnable {
     public String percentPlayer = "";
     public String percentTiles = "";
     public String percentObjects = "";
+    public String percentEnvironment = "";
     public float deltaDraw = 0F;
     TileManager tileM = new TileManager(this);
     Thread gameThread;
@@ -41,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     public UI ui = new UI(this, mouseKM, mouseML);
     public Player player = new Player(this, keyH, mouseKM, mouseML, ui);
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
-
+    EnvironmentManager eManager = new EnvironmentManager(this);
     //WORLD SETTINGS:
     public final int MAXWORLDCOL = 100;
     public final int MAXWORLDROW = 100;
@@ -50,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
     public int fps = 75;
 
     public GamePanel(JFrame mainFrame){
+        Logger.log("setting up game-panel!", MESSAGE_PRIO.NORMAL);
         mainFrame2 = mainFrame;
         setPreferredSize(new DimensionUIResource(SCREENWIDTH, SCREENHEIGHT)); //maybe do some trickery for resizable windows here in the future!
         setBackground(ColorUIResource.BLACK);
@@ -58,17 +56,22 @@ public class GamePanel extends JPanel implements Runnable {
         addMouseListener(mouseKM);
         addMouseMotionListener(mouseML);
         setFocusable(true); //used for catching userinputs
-        System.out.println("gamepanel set up!");
+        Logger.log("setting up game-panel: DONE", MESSAGE_PRIO.NORMAL);
     }
-    public void setupGame(){
-        System.out.println("setting up game!");
+    public void setupGame() {
+        Logger.log("setting up game!", MESSAGE_PRIO.NORMAL);
+        System.out.println();
+        Logger.log("setting up environment!", MESSAGE_PRIO.DEBUG);
+        eManager.setup();
+        Logger.log("setting up environment: DONE", MESSAGE_PRIO.DEBUG);
         objManager.setObject();
-        System.out.println("setting up game: DONE");
+        Logger.log("setting up game: DONE", MESSAGE_PRIO.NORMAL);
     }
 
     public void startGameThread(){
         gameThread = new Thread(this);
         gameThread.start();
+        Logger.log("Threadstate: " + gameThread.getState(), MESSAGE_PRIO.NORMAL);
     }
 
     @Override
@@ -146,6 +149,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
         long drawObjectsEnd = System.nanoTime();
         //endregion
+        //region environment
+        long drawEnvironment = System.nanoTime();
+        Logger.log("drawE", MESSAGE_PRIO.DEBUG);
+        eManager.draw(g2);
+        long drawEnvironmentEnd = System.nanoTime();
+        //endregion
         //region player
         long drawPlayer = System.nanoTime();
         player.draw(g2);
@@ -163,6 +172,7 @@ public class GamePanel extends JPanel implements Runnable {
         percentObjects = "Objects: " + String.format("%.0f",(drawObjectsEnd - drawObjects) / deltaDraw*100) + "%";
         percentTiles = "Tiles: " + String.format("%.0f",(drawTileEnd - drawTile) / deltaDraw*100) + "%";
         percentPlayer = "Player: " + String.format("%.0f",(drawPlayerEnd - drawPlayer) / deltaDraw*100) + "%";
+        percentEnvironment = "Environment: " + String.format("%.0f", (drawEnvironmentEnd - drawEnvironment)/deltaDraw * 100) + "%";
         //endregion
         //region avrgDrawTime
         if (cycles < avrgLenght) {
@@ -176,13 +186,12 @@ public class GamePanel extends JPanel implements Runnable {
                 passedTimes[i] = 0;
             }
             result = added/avrgLenght;
-            if (DEBUG) {
-                System.out.println(avrgLenght + " drawtimes took: " + result + "ns on average!");
-                System.out.println("that is: " + (double) Math.round(result / 100_0F) / 100 + "ms");
-                System.out.println(percentUI + " " + percentObjects + " " + percentTiles + " " + percentPlayer);
-            }
+            Logger.log(avrgLenght + " drawtimes took: " + result + "ns on average!", MESSAGE_PRIO.DEBUG);
+            Logger.log("that is: " + (double) Math.round(result / 100_0F) / 100 + "ms", MESSAGE_PRIO.DEBUG);
+            Logger.log(percentUI + " " + percentObjects + " " + percentTiles + " " + percentPlayer, MESSAGE_PRIO.DEBUG);
         }
         //endregion
         g2.dispose(); //disposes of the recource it is using
     }
+    
 }
