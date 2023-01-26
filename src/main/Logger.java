@@ -7,4 +7,8 @@ public class Logger {
             System.out.println(PREFIX + msg);
         }
     }
+    public static void log (String msg){
+        String PREFIX = "[" + "NONE" + "]" + " ";
+        System.out.println(PREFIX + msg);
+    }
 }

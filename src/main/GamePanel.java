@@ -6,6 +6,7 @@ import javax.swing.plaf.DimensionUIResource;
 
 import entity.Player;
 import environment.EnvironmentManager;
+import environment.Lighting;
 import main.object.SuperObject;
 import tile.TileManager;
 
@@ -123,6 +124,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update(){
         player.update();
+        //EnvironmentManager.updateAll();
     }
 
     int avrgLenght = 80;
@@ -151,7 +153,6 @@ public class GamePanel extends JPanel implements Runnable {
         //endregion
         //region environment
         long drawEnvironment = System.nanoTime();
-        Logger.log("drawE", MESSAGE_PRIO.DEBUG);
         eManager.draw(g2);
         long drawEnvironmentEnd = System.nanoTime();
         //endregion

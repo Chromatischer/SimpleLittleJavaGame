@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 public class Main {
     public static final MESSAGE_PRIO DEBUG = MESSAGE_PRIO.DEBUG;
     public static void main(String[] args) throws Exception {
+        Logger.log("logging level: " + DEBUG.name());
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(true);

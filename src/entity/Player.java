@@ -31,8 +31,10 @@ public class Player extends Entity {
         this.ui = ui;
         this.mouseKM = mouseKM;
         this.moveListener = moveListener;
-        screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
-        screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
+        Logger.log("setting screen pos!");
+        screenX = 384;
+        screenY = 288;
+        Logger.log(screenX + ":" + screenY, MESSAGE_PRIO.FINEST);
         solidArea = new Rectangle(8, 16, 32, 32); //TODO: make adaptable to current TileSize!
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
@@ -59,7 +61,7 @@ public class Player extends Entity {
      */
     public void getPlayerImage(){
         try {
-            System.out.println("reading images for player!");
+            Logger.log("reading images for player!", MESSAGE_PRIO.DEBUG);
             upAnimation = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/player_walk_up_animation.png")));
 
             downAnimation = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/player_walk_right.png")));
@@ -69,7 +71,7 @@ public class Player extends Entity {
             rightAnimation = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/player_walk_up.png")));
 
             idleAnimation = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/player/player_idle_animation.png")));
-            System.out.println("reading images for player: DONE");
+            Logger.log("reading images for player: DONE", MESSAGE_PRIO.NORMAL);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,6 +2,8 @@ package tile;
 
 import main.GamePanel;
 import main.ImageManager;
+import main.Logger;
+import main.MESSAGE_PRIO;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -36,13 +38,13 @@ public class TileManager {
      */
     public void getTileMapImages(String image, String collisionMap){
 
-        System.out.println("resolving image tile map!");
+        Logger.log("resolving image tile map!", MESSAGE_PRIO.DEBUG);
 
         BufferedImage tileMapImage = null;
         try {
             tileMapImage = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(image)));
         } catch (IOException | NullPointerException e){
-            System.out.println(e.getMessage());
+            Logger.log(e.getMessage(), MESSAGE_PRIO.ERROR);
         }
         assert tileMapImage != null;
         Boolean[][] collisions = null;
@@ -66,7 +68,7 @@ public class TileManager {
                 }
             }
         } catch (IOException e){
-            System.out.println(e.getMessage());
+            Logger.log(e.getMessage(), MESSAGE_PRIO.ERROR);
         }
         tile = new Tile[tileMapImage.getWidth()/16 * tileMapImage.getHeight()/16];
         for (int y = 0; y < tileMapImage.getHeight(); y +=16){
@@ -77,7 +79,7 @@ public class TileManager {
                 tile[tileNum].collision = collisions[x / 16][y / 16];
             }
         }
-        System.out.println("resolving image tile map: DONE");
+        Logger.log("resolving image tile map: DONE", MESSAGE_PRIO.DEBUG);
     }
 
     /**
