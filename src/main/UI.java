@@ -43,6 +43,7 @@ public class UI {
     int pauseframes = 0;
     int noDebugDrawFrame = 20;
     String percentObjects = "";
+    String percentEnvironment = "";
     String percentPlayer = "";
     String percentTiles = "";
     String percentUI = "";
@@ -92,7 +93,7 @@ public class UI {
         this.moveListener = moveListener;
         OBJKey key = new OBJKey();
         String invTileMap = "/res/inv/inventory_tile_map.png";
-        System.out.println("reading images for UI!");
+        Logger.log("reading images for UI!", MESSAGE_PRIO.DEBUG);
         try {
             inv = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/inv/inv2.png")));
             invRight = ImageManager.getTile(16, 0, 16, 16, 32, 64, invTileMap);
@@ -103,7 +104,7 @@ public class UI {
             invCornerRightBottom = ImageManager.getTile(16, 48, 16, 16, 32, 64, invTileMap);
             invCornerLeftTop = ImageManager.getTile(0, 32, 16, 16, 32, 64, invTileMap);
             invCornerRightTop = ImageManager.getTile(16, 32, 16, 16, 32, 64, invTileMap);
-            System.out.println("reading images for UI: DONE");
+            Logger.log("reading images for UI: DONE", MESSAGE_PRIO.NORMAL);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -263,6 +264,7 @@ public class UI {
         if (DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()){
             if (noDebugDrawFrame > 20) {
                 percentObjects = gp.percentObjects;
+                percentEnvironment = gp.percentEnvironment;
                 percentPlayer = gp.percentPlayer;
                 percentTiles = gp.percentTiles;
                 percentUI = gp.percentUI;
@@ -271,7 +273,8 @@ public class UI {
             }
             noDebugDrawFrame ++;
             g2.setFont(g2.getFont().deriveFont(15F));
-            g2.drawString(drawTime, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(drawTime, g2).getWidth()), Math.round(gp.getSize().getHeight() - 5 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(drawTime, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(drawTime, g2).getWidth()), Math.round(gp.getSize().getHeight() - 6 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(percentEnvironment, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentEnvironment, g2).getWidth()), Math.round(gp.getSize().getHeight() - 5 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentObjects, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentObjects, g2).getWidth()), Math.round(gp.getSize().getHeight() - 4 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentPlayer, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentPlayer, g2).getWidth()), Math.round(gp.getSize().getHeight() - 3 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentTiles, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentTiles, g2).getWidth()), Math.round(gp.getSize().getHeight() - 2 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));

@@ -7,13 +7,13 @@ import main.MESSAGE_PRIO;
 import java.awt.*;
 
 public class EnvironmentManager {
-    GamePanel gp;
+    static GamePanel gp;
     Lighting lighting;
     public EnvironmentManager(GamePanel gp){
-        this.gp = gp;
+        EnvironmentManager.gp = gp;
     }
     public void setup(){
-        lighting = new Lighting(gp, 350);
+        lighting = new Lighting(gp, 100);
     }
     public void draw(Graphics2D g2){
         try {
@@ -23,7 +23,8 @@ public class EnvironmentManager {
             Logger.log("Message: " + e.getMessage(), MESSAGE_PRIO.ERROR);
         }
     }
-    public void updateAll(){
-        lighting.updateLighting(350);
+    public static void updateAll(){
+        Lighting.updateLighting(Math.min(gp.getWidth(), gp.getHeight())-gp.TILESIZE-2);
     }
+    //Math.min(gp.getHeight(), gp.getWidth())-1
 }

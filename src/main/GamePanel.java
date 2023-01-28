@@ -13,7 +13,8 @@ import tile.TileManager;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    //SCREEN SETTINGS
+    //TODO: make player hit-box variable with screen size!
+    //region screen settings
     final int ORIGINALTILESIZE = 16;
     int SCALE = 3;
     public int TILESIZE = ORIGINALTILESIZE * SCALE; //48px
@@ -21,13 +22,15 @@ public class GamePanel extends JPanel implements Runnable {
     public final int MAXSCREENROW = 12;
     public final int SCREENWIDTH = MAXSCREENCOL * TILESIZE; //768px
     public final int SCREENHEIGHT = MAXSCREENROW * TILESIZE; //576px
+    //endregion
     JFrame mainFrame2;
-
+    //region percent strings
     public String percentUI = "";
     public String percentPlayer = "";
     public String percentTiles = "";
     public String percentObjects = "";
     public String percentEnvironment = "";
+    //endregion
     public float deltaDraw = 0F;
     TileManager tileM = new TileManager(this);
     Thread gameThread;
@@ -40,15 +43,14 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH, mouseKM, mouseML, ui);
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
     EnvironmentManager eManager = new EnvironmentManager(this);
-    //WORLD SETTINGS:
+    //region world size
     public final int MAXWORLDCOL = 100;
     public final int MAXWORLDROW = 100;
-
-    //FPS:
+    //endregion
     public int fps = 75;
 
     public GamePanel(JFrame mainFrame){
-        Logger.log("setting up game-panel!", MESSAGE_PRIO.NORMAL);
+        Logger.log("setting up game-panel!", MESSAGE_PRIO.DEBUG);
         mainFrame2 = mainFrame;
         setPreferredSize(new DimensionUIResource(SCREENWIDTH, SCREENHEIGHT)); //maybe do some trickery for resizable windows here in the future!
         setBackground(ColorUIResource.BLACK);
@@ -60,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
         Logger.log("setting up game-panel: DONE", MESSAGE_PRIO.NORMAL);
     }
     public void setupGame() {
-        Logger.log("setting up game!", MESSAGE_PRIO.NORMAL);
+        Logger.log("setting up game!", MESSAGE_PRIO.DEBUG);
         System.out.println();
         Logger.log("setting up environment!", MESSAGE_PRIO.DEBUG);
         eManager.setup();
@@ -72,7 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void startGameThread(){
         gameThread = new Thread(this);
         gameThread.start();
-        Logger.log("Threadstate: " + gameThread.getState(), MESSAGE_PRIO.NORMAL);
+        Logger.log("Threadstate: " + gameThread.getState(), MESSAGE_PRIO.DEBUG);
     }
 
     @Override
@@ -84,16 +86,19 @@ public class GamePanel extends JPanel implements Runnable {
         long timer = 0;
         long timer2 = 0;
         int drawCount = 0;
+        int lastScreenX = 0, lastScreenY = 0;
 
         while (gameThread != null){
-
+            //region timing variables
             currentTime = System.nanoTime();
 
             delta += (currentTime - lastTime) / drawInterval; //difference of time till the next frame has to be drawn!     USE: Frame based operations
             timer += (currentTime - lastTime); //timer counting in nano seconds                                             USE: Time based operations
             timer2 += (currentTime - lastTime); //timer counting in nano seconds                                            USE: Time based operations
             lastTime = currentTime;
+            //endregion
 
+            //region time-based operations
             if (delta >= 1){ //updating and redrawing the game at 60FPS
                 repaint();
                 delta --;
@@ -109,8 +114,9 @@ public class GamePanel extends JPanel implements Runnable {
                 drawCount = 0;
                 timer = 0;
             }
+            //endregion
 
-            //function to control the resizability of the game!
+            //region function to control the resizability of the game!
             if ((MAXSCREENCOL * (TILESIZE + ORIGINALTILESIZE) < getSize().width) && (MAXSCREENROW * (TILESIZE + ORIGINALTILESIZE) < getSize().height)){
                 SCALE ++;
                 TILESIZE = ORIGINALTILESIZE * SCALE; //48px
@@ -119,12 +125,18 @@ public class GamePanel extends JPanel implements Runnable {
                 SCALE --;
                 TILESIZE = ORIGINALTILESIZE * SCALE; //48px
             }
+            if (lastScreenX != getWidth() || lastScreenY != getHeight()){
+                lastScreenX = getWidth();
+                lastScreenY = getHeight();
+                EnvironmentManager.updateAll();
+                Logger.log(player.screenX + " : " + player.screenY, MESSAGE_PRIO.FINEST);
+            }
+            //endregion
         }
     }
 
     public void update(){
         player.update();
-        //EnvironmentManager.updateAll();
     }
 
     int avrgLenght = 80;

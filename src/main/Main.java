@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 public class Main {
     public static final MESSAGE_PRIO DEBUG = MESSAGE_PRIO.DEBUG;
     public static void main(String[] args) throws Exception {
-        Logger.log("logging level: " + DEBUG.name());
+        Logger.log("logging level: " + DEBUG.name(), MESSAGE_PRIO.NORMAL);
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(true);
@@ -19,9 +19,8 @@ public class Main {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-        Logger.log("setting up game!", MESSAGE_PRIO.DEBUG);
         gamePanel.setupGame();
         gamePanel.startGameThread();
-        Logger.log("Thread started!", MESSAGE_PRIO.NORMAL);
+        Logger.log("Thread started, Game Running!", MESSAGE_PRIO.NORMAL);
     }
 }

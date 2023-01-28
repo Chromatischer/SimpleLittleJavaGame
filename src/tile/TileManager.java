@@ -58,7 +58,7 @@ public class TileManager {
                     String line = br.readLine();
                     if (line != null) {
                         //simple debug line (could be used later!)
-                        //System.out.println("y:" + y + " x: " + x + " fileY: " + line.split(" ")[0] + " fileX: " + line.split(" ")[1] + " fileBool: " + line.split(" ")[2] + " getBool: " + Boolean.parseBoolean(line.split(" ")[2]));
+                        Logger.log("y:" + y + " x: " + x + " fileY: " + line.split(" ")[0] + " fileX: " + line.split(" ")[1] + " fileBool: " + line.split(" ")[2] + " getBool: " + Boolean.parseBoolean(line.split(" ")[2]), MESSAGE_PRIO.FINEST);
                         if (Integer.parseInt(line.split(" ")[0]) == y && Integer.parseInt(line.split(" ")[1]) == x) {
                             collisions[y][x] = Boolean.parseBoolean(line.split(" ")[2]);
                         } else {
@@ -87,7 +87,7 @@ public class TileManager {
      * @param fileMap the location to the .txt map file
      */
     public void loadMap(String fileMap){
-        System.out.println("reading map file!");
+        Logger.log("reading map file!", MESSAGE_PRIO.DEBUG);
         try {
             InputStream is = getClass().getResourceAsStream(fileMap);
             assert is != null;
@@ -114,7 +114,7 @@ public class TileManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("reading map file: DONE");
+        Logger.log("reading map file: DONE", MESSAGE_PRIO.NORMAL);
     }
 
     /**

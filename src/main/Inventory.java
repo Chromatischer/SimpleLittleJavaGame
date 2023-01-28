@@ -1,5 +1,6 @@
 package main;
 
+import items.ITEM_TYPE;
 import items.ItemStack;
 
 
@@ -10,7 +11,7 @@ public class Inventory {
         this.size = size;
         itemStacks = new ItemStack[size];
         for (int i = 0; i < itemStacks.length; i++) {
-            itemStacks[i] = new ItemStack("air", 0);
+            itemStacks[i] = new ItemStack(ITEM_TYPE.AIR, 0);
         }
     }
 
@@ -48,7 +49,7 @@ public class Inventory {
     public void setSize(int size) {
         itemStacks = new ItemStack[size];
         for (int i = 0; i < itemStacks.length; i++) {
-            itemStacks[i] = new ItemStack("air", 0);
+            itemStacks[i] = new ItemStack(ITEM_TYPE.AIR, 0);
         }
     }
     public String getAllTypesAsSting(){

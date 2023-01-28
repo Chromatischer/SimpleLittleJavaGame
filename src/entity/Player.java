@@ -31,7 +31,7 @@ public class Player extends Entity {
         this.ui = ui;
         this.mouseKM = mouseKM;
         this.moveListener = moveListener;
-        Logger.log("setting screen pos!");
+        Logger.log("setting screen pos!", MESSAGE_PRIO.FINE);
         screenX = 384;
         screenY = 288;
         Logger.log(screenX + ":" + screenY, MESSAGE_PRIO.FINEST);
