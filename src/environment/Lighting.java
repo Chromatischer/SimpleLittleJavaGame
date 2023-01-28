@@ -1,15 +1,15 @@
 package environment;
 
 import main.*;
+import utilities.Logger;
+import utilities.MESSAGE_PRIO;
+import utilities.Random;
 
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Lighting {
     static GamePanel gp;

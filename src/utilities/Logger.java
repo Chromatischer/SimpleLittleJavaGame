@@ -1,4 +1,6 @@
-package main;
+package utilities;
+
+import main.Main;
 
 public class Logger {
     public static void log(String msg, MESSAGE_PRIO prio){

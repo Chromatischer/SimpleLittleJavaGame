@@ -1,9 +1,9 @@
 package tile;
 
 import main.GamePanel;
-import main.ImageManager;
-import main.Logger;
-import main.MESSAGE_PRIO;
+import managers.ImageManager;
+import utilities.Logger;
+import utilities.MESSAGE_PRIO;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

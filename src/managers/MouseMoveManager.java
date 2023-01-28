@@ -1,9 +1,9 @@
-package main;
+package managers;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-public class MouseMoveListener implements MouseMotionListener {
+public class MouseMoveManager implements MouseMotionListener {
     public int locationX;
     public int locationY;
     @Override

@@ -1,4 +1,7 @@
 package main;
+import utilities.Logger;
+import utilities.MESSAGE_PRIO;
+
 import javax.swing.JFrame;
 
 public class Main {

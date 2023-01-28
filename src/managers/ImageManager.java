@@ -1,4 +1,7 @@
-package main;
+package managers;
+
+import utilities.Logger;
+import utilities.MESSAGE_PRIO;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

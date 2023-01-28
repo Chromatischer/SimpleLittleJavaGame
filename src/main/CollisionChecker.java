@@ -67,7 +67,7 @@ public class CollisionChecker {
      * checks if the entity is intersecting with any objects
      * @param entity the entity to check for
      * @param player is the entity player
-     * @return the index of the object in the obj array (only if player flag is true) else returns 999 if no object touched: 999
+     * @return the index of the main.object in the obj array (only if player flag is true) else returns 999 if no main.object touched: 999
      */
     public int checkObject(Entity entity, boolean player){
         int index = 999;

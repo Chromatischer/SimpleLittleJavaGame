@@ -1,14 +1,16 @@
 package main.object;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.io.IOException;
+import main.SuperObject;
 
-public class OBJChest extends SuperObject{
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.util.Objects;
+
+public class OBJChest extends SuperObject {
     public OBJChest(){
         name = "Chest";
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/res/object/chest.png"));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/object/chest.png")));
         } catch (IOException e){
             e.printStackTrace();
         }

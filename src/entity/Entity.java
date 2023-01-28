@@ -27,7 +27,7 @@ public class Entity {
      */
     int idleUpdates = 0;
     /**
-     * the intersecting object
+     * the intersecting main.object
      */
     int objIndex;
     /**

@@ -1,15 +1,17 @@
 package main;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.plaf.DimensionUIResource;
 
 import entity.Player;
 import environment.EnvironmentManager;
-import environment.Lighting;
-import main.object.SuperObject;
+import managers.KeyManager;
+import managers.MouseClickManager;
+import managers.MouseMoveManager;
 import tile.TileManager;
+import utilities.Logger;
+import utilities.MESSAGE_PRIO;
 
+import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.DimensionUIResource;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -36,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     KeyManager keyH = new KeyManager();
     MouseClickManager mouseKM = new MouseClickManager();
-    MouseMoveListener mouseML = new MouseMoveListener();
+    MouseMoveManager mouseML = new MouseMoveManager();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public ObjectManager objManager = new ObjectManager(this);
     public UI ui = new UI(this, mouseKM, mouseML);

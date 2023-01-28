@@ -1,8 +1,8 @@
 package environment;
 
 import main.GamePanel;
-import main.Logger;
-import main.MESSAGE_PRIO;
+import utilities.Logger;
+import utilities.MESSAGE_PRIO;
 
 import java.awt.*;
 

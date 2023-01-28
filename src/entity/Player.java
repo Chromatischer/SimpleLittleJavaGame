@@ -5,7 +5,12 @@ import inventory.Inventory;
 import items.ITEM_TYPE;
 import items.ItemStack;
 import main.*;
+import managers.KeyManager;
+import managers.MouseClickManager;
+import managers.MouseMoveManager;
 import org.jetbrains.annotations.NotNull;
+import utilities.Logger;
+import utilities.MESSAGE_PRIO;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,7 +20,7 @@ import java.util.Objects;
 public class Player extends Entity {
     KeyManager keyH;
     MouseClickManager mouseKM;
-    MouseMoveListener moveListener;
+    MouseMoveManager moveListener;
 
     public int hasKey = 0;
 
@@ -25,7 +30,7 @@ public class Player extends Entity {
      * @param keyH the keyInputs to receive
      * @param ui the ui to use
      */
-    public Player(@NotNull GamePanel gp, KeyManager keyH, MouseClickManager mouseKM, MouseMoveListener moveListener, UI ui){
+    public Player(@NotNull GamePanel gp, KeyManager keyH, MouseClickManager mouseKM, MouseMoveManager moveListener, UI ui){
         this.gp = gp;
         this.keyH = keyH;
         this.ui = ui;
@@ -150,10 +155,10 @@ public class Player extends Entity {
 
     /**
      * main interaction methode used for well: interaction of player with objects
-     * @param index the index of the object that was touched!
+     * @param index the index of the main.object that was touched!
      */
     public void interactObject(int index){
-        if (index != 999){ //not no object
+        if (index != 999){ //not no main.object
             switch (gp.obj[index].name) {
                 case "Key":
                     inventory.addItemStack(new ItemStack(ITEM_TYPE.KEY, 1));

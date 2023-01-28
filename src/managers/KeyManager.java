@@ -1,7 +1,7 @@
-package main;
+package managers;
 import java.awt.event.*;
 public class KeyManager implements KeyListener{
-    public boolean upPressed, downPressed, leftPressed, rightPressed, nonePressed, inventoryPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, inventoryPressed;
 
     @Override
     public void keyTyped(KeyEvent e) {} //not used
@@ -43,13 +43,6 @@ public class KeyManager implements KeyListener{
         if (code == KeyEvent.VK_D){
             rightPressed = false;
         }
-        //TODO: this is mend to set a no key pressed flag... make it useful in the future!... ... ... PLEASE
-        /*if (!upPressed && !downPressed && !leftPressed && !rightPressed){
-            nonePressed = true;
-        } else {
-            nonePressed = false;
-        } */
     }
-
 }
 

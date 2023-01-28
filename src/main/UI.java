@@ -1,10 +1,16 @@
 package main;
 
+import entity.HEALTH_EFFECTS;
 import inventory.Inventory;
 import items.ITEM_TYPE;
 import items.ItemStack;
-import main.object.OBJKey;
+import main.object.*;
+import managers.ImageManager;
+import managers.MouseClickManager;
+import managers.MouseMoveManager;
 import org.jetbrains.annotations.NotNull;
+import utilities.Logger;
+import utilities.MESSAGE_PRIO;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,7 +23,7 @@ import static main.Main.DEBUG;
 public class UI {
     GamePanel gp;
     MouseClickManager clickManager;
-    MouseMoveListener moveListener;
+    MouseMoveManager moveListener;
     /**
      * the main font to use!
      */
@@ -87,7 +93,7 @@ public class UI {
     BufferedImage fullHeartImg, halfHeartImg;
     BufferedImage imageInHand = null;
 
-    public UI(GamePanel gp, MouseClickManager clickManager, MouseMoveListener moveListener) {
+    public UI(GamePanel gp, MouseClickManager clickManager, MouseMoveManager moveListener) {
         this.gp = gp;
         this.clickManager = clickManager;
         this.moveListener = moveListener;

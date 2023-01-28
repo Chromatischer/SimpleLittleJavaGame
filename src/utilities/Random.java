@@ -1,4 +1,4 @@
-package main;
+package utilities;
 
 public class Random {
     /**
@@ -37,7 +37,7 @@ public class Random {
         }
     }
     public static int randomAddSubtract(int startValue, int delta, int min, int max){
-        int returnVal = 0;
+        int returnVal;
         if (getRandomBool()){
             returnVal = startValue - delta;
         } else {

@@ -1,13 +1,16 @@
 package main.object;
 
+import main.SuperObject;
+
 import javax.imageio.ImageIO;
 import java.io.IOException;
+import java.util.Objects;
 
-public class OBJKey extends SuperObject{
+public class OBJKey extends SuperObject {
     public OBJKey(){
         name = "Key";
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/res/object/key.png"));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/object/key.png")));
         } catch (IOException e){
             e.printStackTrace();
         }
