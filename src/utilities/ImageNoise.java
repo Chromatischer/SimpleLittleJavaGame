@@ -12,6 +12,7 @@ public class ImageNoise {
      * @param colorshift whether to shift individual colors not only make the pixel brighter! if 0 no color-shift is going to happen!
      */
     public static BufferedImage noise(BufferedImage image, int amount, int value, boolean includeBlacks, int colorshift){
+        Logger.log("generating noise for image: " + image.toString() + " with amount: " + amount*1000 + " and a value of: " + value + " black include: " + includeBlacks + " colorshift: " + colorshift, MESSAGE_PRIO.FINER);
         amount = amount * 1000;
         for (int i = 0; i < amount; i++) {
             int x = Random.getRandom(0, image.getWidth() - 1);

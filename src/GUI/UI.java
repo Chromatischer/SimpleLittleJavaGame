@@ -55,6 +55,7 @@ public class UI {
     String percentTiles = "";
     String percentUI = "";
     String drawTime = "";
+    String percentVignette = "";
     int spaceX = 0;
     int spaceY = 0;
     int col = 9; //amount of slots in one line
@@ -272,6 +273,7 @@ public class UI {
             if (noDebugDrawFrame > 20) {
                 percentObjects = gp.percentObjects;
                 percentEnvironment = gp.percentEnvironment;
+                percentVignette = gp.percentVignette;
                 percentPlayer = gp.percentPlayer;
                 percentTiles = gp.percentTiles;
                 percentUI = gp.percentUI;
@@ -280,7 +282,8 @@ public class UI {
             }
             noDebugDrawFrame ++;
             g2.setFont(g2.getFont().deriveFont(15F));
-            g2.drawString(drawTime, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(drawTime, g2).getWidth()), Math.round(gp.getSize().getHeight() - 6 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(drawTime, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(drawTime, g2).getWidth()), Math.round(gp.getSize().getHeight() - 7 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(percentVignette, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentVignette, g2).getWidth()), Math.round(gp.getSize().getHeight() - 6 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentEnvironment, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentEnvironment, g2).getWidth()), Math.round(gp.getSize().getHeight() - 5 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentObjects, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentObjects, g2).getWidth()), Math.round(gp.getSize().getHeight() - 4 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentPlayer, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentPlayer, g2).getWidth()), Math.round(gp.getSize().getHeight() - 3 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));

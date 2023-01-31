@@ -13,7 +13,8 @@ public class EnvironmentManager {
         EnvironmentManager.gp = gp;
     }
     public void setup(){
-        lighting = new Lighting(gp, 100);
+        //lighting = new Lighting(gp, 100);
+        lighting = new Lighting(gp, 10000);
     }
     public void draw(Graphics2D g2){
         try {
@@ -24,7 +25,7 @@ public class EnvironmentManager {
         }
     }
     public static void updateAll(){
-        Lighting.updateLighting(Math.min(gp.getWidth(), gp.getHeight())-gp.TILESIZE-2);
+        Lighting.updateLighting(10000);
     }
     //Math.min(gp.getHeight(), gp.getWidth())-1
 }

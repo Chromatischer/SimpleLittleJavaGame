@@ -34,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
     public String percentTiles = "";
     public String percentObjects = "";
     public String percentEnvironment = "";
+    public String percentVignette = "";
     //endregion
     public float deltaDraw = 0F;
     TileManager tileM = new TileManager(this);
@@ -47,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH, mouseKM, mouseML, ui);
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
     EnvironmentManager eManager = new EnvironmentManager(this);
-    Vignette vignette = new Vignette(this, 16, 12);
+    Vignette vignette = new Vignette(this, 30, 30); //TODO: fix it! IDK waht is broken but its your problem now!
     //region world size
     public final int MAXWORLDCOL = 100;
     public final int MAXWORLDROW = 100;
@@ -134,6 +135,7 @@ public class GamePanel extends JPanel implements Runnable {
                 lastScreenX = getWidth();
                 lastScreenY = getHeight();
                 EnvironmentManager.updateAll();
+                vignette.update();
                 Logger.log(player.screenX + " : " + player.screenY, MESSAGE_PRIO.FINEST);
             }
             //endregion
@@ -168,10 +170,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
         long drawObjectsEnd = System.nanoTime();
         //endregion
+        //region vignette
+        long drawVignette = System.nanoTime();
+        vignette.draw(g2);
+        long drawVignetteEnd = System.nanoTime();
+        //endregion
         //region environment
         long drawEnvironment = System.nanoTime();
-        //eManager.draw(g2);
-        vignette.draw(g2);
+        eManager.draw(g2);
         long drawEnvironmentEnd = System.nanoTime();
         //endregion
         //region player
@@ -192,6 +198,8 @@ public class GamePanel extends JPanel implements Runnable {
         percentTiles = "Tiles: " + String.format("%.0f",(drawTileEnd - drawTile) / deltaDraw*100) + "%";
         percentPlayer = "Player: " + String.format("%.0f",(drawPlayerEnd - drawPlayer) / deltaDraw*100) + "%";
         percentEnvironment = "Environment: " + String.format("%.0f", (drawEnvironmentEnd - drawEnvironment)/deltaDraw * 100) + "%";
+        percentVignette = "Vignette: " + String.format("%.0f", (drawEnvironmentEnd - drawEnvironment)/deltaDraw * 100) + "%";
+
         //endregion
         //region avrgDrawTime
         if (cycles < avrgLenght) {
