@@ -1,6 +1,7 @@
 package environment;
 
 import main.*;
+import utilities.ImageNoise;
 import utilities.Logger;
 import utilities.MESSAGE_PRIO;
 import utilities.Random;
@@ -10,6 +11,8 @@ import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
+import static utilities.ImageNoise.noise;
 
 public class Lighting {
     static GamePanel gp;
@@ -76,8 +79,7 @@ public class Lighting {
 
         g2.fill(screenArea);
 
-        noise(50000, 5, false);
-        noise(100000, 3, true);
+        applyStandardNoise();
 
         g2.dispose();
         Logger.log("setting up lighting: DONE", MESSAGE_PRIO.DEBUG);
@@ -119,37 +121,20 @@ public class Lighting {
 
             g2.fill(screenArea);
 
-            noise(50000, 5, false);
-            noise(100000, 3, true);
+            applyStandardNoise();
 
             g2.dispose();
             Logger.log("updating lighting: DONE", MESSAGE_PRIO.DEBUG);
         }
     }
 
+
+
     /**
-     * generates noise on the darkness-filter
-     * @param amount the amount of noise samples to change (can overlap)
-     * @param value the value to lighten the noise point up by (random from 0 to the given value)
-     * @param includeBlacks whether to include the default "black" alpha pixels (96% opacity)
+     * applies the standard noise to the lighting!
      */
-    private static void noise(int amount, int value, boolean includeBlacks){
-        for (int i = 0; i < amount; i++) {
-            int x = Random.getRandom(0, darknessFilter.getWidth() - 1);
-            int y = Random.getRandom(0, darknessFilter.getHeight() - 1);
-            int randVal = Random.getRandom(0, value);
-            Color colori = new Color(darknessFilter.getRGB(x, y), true);
-            if (colori.getAlpha() < 255*0.96 || includeBlacks) {
-                int newRed = colori.getRed() + randVal;
-                int newGreen = colori.getGreen() + randVal;
-                int newBlue = colori.getBlue() + randVal;
-                int newAlpha = colori.getAlpha();
-                if (colori.getAlpha() > value) {
-                    newAlpha = colori.getAlpha() - randVal;
-                }
-                Color coloriFinal = new Color(newRed, newGreen, newBlue, newAlpha);
-                darknessFilter.setRGB(x, y, coloriFinal.getRGB());
-            }
-        }
+    private static void applyStandardNoise(){
+        ImageNoise.noise(darknessFilter, 50, 5, false, 5);
+        ImageNoise.noise(darknessFilter, 100, 3, true, 0);
     }
 }

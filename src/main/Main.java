@@ -5,7 +5,7 @@ import utilities.MESSAGE_PRIO;
 import javax.swing.JFrame;
 
 public class Main {
-    public static final MESSAGE_PRIO DEBUG = MESSAGE_PRIO.DEBUG;
+    public static final MESSAGE_PRIO DEBUG = MESSAGE_PRIO.NORMAL;
     public static void main(String[] args) throws Exception {
         Logger.log("logging level: " + DEBUG.name(), MESSAGE_PRIO.NORMAL);
         JFrame window = new JFrame();

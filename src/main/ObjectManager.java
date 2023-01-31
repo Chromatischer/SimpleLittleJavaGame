@@ -1,7 +1,6 @@
 package main;
 
-import main.object.OBJChest;
-import main.object.OBJKey;
+import main.object.*;
 
 public class ObjectManager {
     GamePanel gp;

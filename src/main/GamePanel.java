@@ -1,5 +1,7 @@
 package main;
 
+import GUI.UI;
+import GUI.Vignette;
 import entity.Player;
 import environment.EnvironmentManager;
 import managers.KeyManager;
@@ -45,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH, mouseKM, mouseML, ui);
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
     EnvironmentManager eManager = new EnvironmentManager(this);
+    Vignette vignette = new Vignette(this, 16, 12);
     //region world size
     public final int MAXWORLDCOL = 100;
     public final int MAXWORLDROW = 100;
@@ -167,7 +170,8 @@ public class GamePanel extends JPanel implements Runnable {
         //endregion
         //region environment
         long drawEnvironment = System.nanoTime();
-        eManager.draw(g2);
+        //eManager.draw(g2);
+        vignette.draw(g2);
         long drawEnvironmentEnd = System.nanoTime();
         //endregion
         //region player
@@ -201,9 +205,9 @@ public class GamePanel extends JPanel implements Runnable {
                 passedTimes[i] = 0;
             }
             result = added/avrgLenght;
-            Logger.log(avrgLenght + " drawtimes took: " + result + "ns on average!", MESSAGE_PRIO.DEBUG);
-            Logger.log("that is: " + (double) Math.round(result / 100_0F) / 100 + "ms", MESSAGE_PRIO.DEBUG);
-            Logger.log(percentUI + " " + percentObjects + " " + percentTiles + " " + percentPlayer, MESSAGE_PRIO.DEBUG);
+            Logger.log(avrgLenght + " drawtimes took: " + result + "ns on average!", MESSAGE_PRIO.FINE);
+            Logger.log("that is: " + (double) Math.round(result / 100_0F) / 100 + "ms", MESSAGE_PRIO.FINE);
+            Logger.log(percentUI + " " + percentObjects + " " + percentTiles + " " + percentPlayer, MESSAGE_PRIO.FINE);
         }
         //endregion
         g2.dispose(); //disposes of the recource it is using

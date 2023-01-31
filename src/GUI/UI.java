@@ -1,9 +1,10 @@
-package main;
+package GUI;
 
 import entity.HEALTH_EFFECTS;
 import inventory.Inventory;
 import items.ITEM_TYPE;
 import items.ItemStack;
+import main.GamePanel;
 import main.object.*;
 import managers.ImageManager;
 import managers.MouseClickManager;

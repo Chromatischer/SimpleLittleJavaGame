@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 
 import main.GamePanel;
 import inventory.Inventory;
-import main.UI;
+import GUI.UI;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Graphics2D;
