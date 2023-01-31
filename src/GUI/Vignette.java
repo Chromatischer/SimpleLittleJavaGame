@@ -115,6 +115,10 @@ public class Vignette {
         g2.dispose();
         Logger.log("setting up Vignette: DONE", MESSAGE_PRIO.NORMAL);
     }
+
+    /**
+     * updates the vignette using the pre-defined size values
+     */
     public void update(){
         setupVariables();
         vignette = new BufferedImage(entireWidth, entireHeight, BufferedImage.TYPE_INT_ARGB);
@@ -131,9 +135,18 @@ public class Vignette {
         g2.dispose();
 
     }
+
+    /**
+     * draws the vignette
+     * @param g2 the Graphics to draw on
+     */
     public void draw(Graphics2D g2){
         g2.drawImage(vignette, 0,0,null);
     }
+
+    /**
+     * sets all the variables used
+     */
     public void setupVariables() {
             //entweder soll das IMG so groß sein, wie die vignette, oder die screen-size!
             entireWidth = Math.max(tileCalcW, gp.SCREENWIDTH);
@@ -143,6 +156,10 @@ public class Vignette {
             midX = entireWidth / 2;
             midY = entireHeight / 2;
     }
+
+    /**
+     * sets up the gradient-paint
+     */
     public void setupGradientPaint(){
         //TODO: hier ist das Problem, diese gradient paint kann kein Oval sein, wahrscheinlich erstmal nicht so schlimm aber muss vlt. noch behoben werden
         gradientPaint = new RadialGradientPaint(midX, midY, tileCalcW / 2F, fraction, color);
