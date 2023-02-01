@@ -14,9 +14,11 @@ import utilities.Logger;
 import utilities.MESSAGE_PRIO;
 
 import javax.imageio.ImageIO;
+import javax.swing.text.Position;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static main.Main.DEBUG;
@@ -94,11 +96,19 @@ public class UI {
      */
     BufferedImage fullHeartImg, halfHeartImg;
     BufferedImage imageInHand = null;
+    Rectangle[] drawRect;
+    Color[] rectColor;
 
     public UI(GamePanel gp, MouseClickManager clickManager, MouseMoveManager moveListener) {
         this.gp = gp;
         this.clickManager = clickManager;
         this.moveListener = moveListener;
+        drawRect = new Rectangle[20];
+        rectColor = new Color[20];
+
+        Arrays.fill(drawRect, null);
+        Arrays.fill(rectColor, null);
+
         OBJKey key = new OBJKey();
         String invTileMap = "/res/inv/inventory_tile_map.png";
         Logger.log("reading images for UI!", MESSAGE_PRIO.DEBUG);
@@ -292,6 +302,20 @@ public class UI {
 
         }
         //endregion
+        //region rectangle draw methode
+        if (DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()) {
+            for (int i = 0; i < drawRect.length; i++) {
+                if (drawRect[i] != null) {
+                    if (rectColor[i] != null) {
+                        g2.setColor(rectColor[i]);
+                    } else {
+                        g2.setColor(Color.BLACK);
+                    }
+                    g2.drawRect(drawRect[i].x, drawRect[i].y, (int) drawRect[i].getWidth(), (int) drawRect[i].getHeight());
+                }
+            }
+        }
+        //endregion
     }
 
     /**
@@ -389,6 +413,32 @@ public class UI {
                 }
             }
             Logger.log(clickManager.mouseX + ":" + clickManager.mouseY + ":" + clickManager.mouseClicked, MESSAGE_PRIO.FINER);
+        }
+    }
+    public void drawRect(int x, int y, int width, int height, Color color, int posX, int posY){
+        for (int i = 0; i < drawRect.length; i++) {
+            if (drawRect[i] == null){
+                drawRect[i] = new Rectangle(x + posX,y + posY,width,height);
+                rectColor[i] = color;
+                break;
+            }
+        }
+    }
+    public void drawRect(Rectangle rectangle, Color color, int posX, int posY){
+        for (int i = 0; i < drawRect.length; i++) {
+            if (drawRect[i] == null){
+                drawRect[i] = new Rectangle(rectangle.x + posX,rectangle.y + posY,rectangle.width,rectangle.height);
+                rectColor[i] = color;
+                break;
+            }
+        }
+    }
+    public void eraseRect(int x, int y, int width, int height, Color color){
+        for (int i = 0; i < drawRect.length; i++) {
+            if (drawRect[i].getHeight() == height && drawRect[i].getWidth() == width && drawRect[i].x == x && drawRect[i].y == y && rectColor[i] == color){
+                drawRect[i] = null;
+                break;
+            }
         }
     }
 }

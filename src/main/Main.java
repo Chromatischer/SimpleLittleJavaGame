@@ -3,10 +3,23 @@ import utilities.Logger;
 import utilities.MESSAGE_PRIO;
 
 import javax.swing.JFrame;
+import java.util.Arrays;
 
 public class Main {
-    public static final MESSAGE_PRIO DEBUG = MESSAGE_PRIO.NORMAL;
+    public static MESSAGE_PRIO DEBUG = MESSAGE_PRIO.DEBUG;
     public static void main(String[] args) throws Exception {
+        if (args.length >= 1) {
+            if (! MESSAGE_PRIO.contains(args[0])) {
+                Logger.log("usage: <message-priority to use>", MESSAGE_PRIO.HIGHEST);
+                System.exit(- 1);
+            } else {
+                DEBUG = MESSAGE_PRIO.valueOf(args[0]);
+            }
+        } else {
+            Logger.log("usage: <message-priority to use>", MESSAGE_PRIO.HIGHEST);
+            System.exit(-1);
+        }
+
         Logger.log("logging level: " + DEBUG.name(), MESSAGE_PRIO.NORMAL);
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -42,9 +42,10 @@ public class GamePanel extends JPanel implements Runnable {
     KeyManager keyH = new KeyManager();
     MouseClickManager mouseKM = new MouseClickManager();
     MouseMoveManager mouseML = new MouseMoveManager();
-    public CollisionChecker cChecker = new CollisionChecker(this);
     public ObjectManager objManager = new ObjectManager(this);
     public UI ui = new UI(this, mouseKM, mouseML);
+    public CollisionChecker cChecker = new CollisionChecker(this, ui);
+
     public Player player = new Player(this, keyH, mouseKM, mouseML, ui);
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
     EnvironmentManager eManager = new EnvironmentManager(this);

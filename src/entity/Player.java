@@ -41,7 +41,7 @@ public class Player extends Entity {
         screenX = 384;
         screenY = 288;
         Logger.log(screenX + ":" + screenY, MESSAGE_PRIO.FINEST);
-        solidArea = new Rectangle(8, 16, 32, 32); //TODO: make adaptable to current TileSize!
+        solidArea = new Rectangle(gp.TILESIZE/6, gp.TILESIZE/3, (int) (gp.TILESIZE/1.5), (int) (gp.TILESIZE/1.5)); //TODO: make adaptable to current TileSize!
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         setDefaultValues();
@@ -90,6 +90,11 @@ public class Player extends Entity {
      * </p>
      */
     public void update(){ //called every milisecond
+        solidArea.setRect(gp.TILESIZE/6D, gp.TILESIZE/3D, gp.TILESIZE/1.5, gp.TILESIZE/2D);
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+        ui.drawRect(solidArea, Color.RED, screenX, screenY);
+
         objIndex = gp.cChecker.checkObject(this, true);
         if (updateCount >= 60){ //executed every 60 miliseconds
             speed = gp.TILESIZE/3; //keep it modular but this is used for collision detection!

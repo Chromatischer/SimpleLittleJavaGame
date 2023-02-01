@@ -1,12 +1,17 @@
 package main;
 
+import GUI.UI;
 import entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
+
 public class CollisionChecker {
     GamePanel gp;
-    public CollisionChecker(GamePanel gp){
+    UI ui;
+    public CollisionChecker(GamePanel gp, UI ui){
         this.gp = gp;
+        this.ui = ui;
     }
 
     /**
@@ -32,6 +37,7 @@ public class CollisionChecker {
                 entityTopRow = (entityTopWorldY - entity.speed) / gp.TILESIZE;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
+                ui.drawRect(0, 0,gp.TILESIZE, gp.TILESIZE, Color.ORANGE, tileNum1, tileNum2);
                 if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                     entity.collisionON = true;
                 }
