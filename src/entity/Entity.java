@@ -48,7 +48,7 @@ public class Entity {
      */
     public Inventory inventory;
     public GamePanel gp;
-    UI ui;
+    public UI ui;
     /**
      * hit-box
      */

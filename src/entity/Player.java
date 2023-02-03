@@ -5,7 +5,7 @@ import inventory.INVENTORY_TYPE;
 import inventory.Inventory;
 import items.ITEM_TYPE;
 import items.ItemStack;
-import main.*;
+import main.GamePanel;
 import managers.KeyManager;
 import managers.MouseClickManager;
 import managers.MouseMoveManager;
@@ -23,8 +23,6 @@ public class Player extends Entity {
     MouseClickManager mouseKM;
     MouseMoveManager moveListener;
 
-    public int hasKey = 0;
-
     /**
      * main player constructor
      * @param gp the main game panel
@@ -41,7 +39,7 @@ public class Player extends Entity {
         screenX = 384;
         screenY = 288;
         Logger.log(screenX + ":" + screenY, MESSAGE_PRIO.FINEST);
-        solidArea = new Rectangle(gp.TILESIZE/6, gp.TILESIZE/3, (int) (gp.TILESIZE/1.5), (int) (gp.TILESIZE/1.5)); //TODO: make adaptable to current TileSize!
+        solidArea = new Rectangle(gp.TILESIZE/6, gp.TILESIZE/3, (int) (gp.TILESIZE/1.5), (int) (gp.TILESIZE/1.5));
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         setDefaultValues();
@@ -89,47 +87,46 @@ public class Player extends Entity {
      *     holding things like: movement and collision!
      * </p>
      */
-    public void update(){ //called every milisecond
-        solidArea.setRect(gp.TILESIZE/6D, gp.TILESIZE/3D, gp.TILESIZE/1.5, gp.TILESIZE/2D);
+    public void update() { //called every milisecond
+        solidArea.setRect(gp.TILESIZE / 6D, gp.TILESIZE / 3D, gp.TILESIZE / 1.5, gp.TILESIZE / 2D);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        ui.drawRect(solidArea, Color.RED, screenX, screenY);
 
         objIndex = gp.cChecker.checkObject(this, true);
-        if (updateCount >= 60){ //executed every 60 miliseconds
-            speed = gp.TILESIZE/3; //keep it modular but this is used for collision detection!
-            if (!keyH.upPressed && !keyH.downPressed && !keyH.leftPressed && !keyH.rightPressed){
-                idleUpdates ++;
+        if (updateCount >= 60) { //executed every 60 miliseconds
+            speed = gp.TILESIZE / 3; //keep it modular but this is used for collision detection!
+            if (! keyH.upPressed && ! keyH.downPressed && ! keyH.leftPressed && ! keyH.rightPressed) {
+                idleUpdates++;
             }
 
-            if (keyH.upPressed){
+            if (keyH.upPressed) {
                 moveY(true, this, true);
             }
-            if (keyH.downPressed){
+            if (keyH.downPressed) {
                 moveY(false, this, true);
             }
-            if (keyH.leftPressed){
+            if (keyH.leftPressed) {
                 moveX(true, this, true);
             }
-            if (keyH.rightPressed){
+            if (keyH.rightPressed) {
                 moveX(false, this, true);
             }
-            if (keyH.inventoryPressed){
+            if (keyH.inventoryPressed) {
                 ui.openInventory(inventory);
             } else {
                 ui.closeInventory(inventory);
             }
         }
 
-        if (idleUpdates >= 5){
+        if (idleUpdates >= 5) {
             setDirection("idle");
         }
 
         interactObject(objIndex);
-        updateCount ++;
+        updateCount++;
 
-        screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() /2));
-        screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() /2));
+        screenX = Math.toIntExact(Math.round(gp.getSize().getWidth() / 2));
+        screenY = Math.toIntExact(Math.round(gp.getSize().getHeight() / 2));
     }
 
     /**
@@ -177,6 +174,10 @@ public class Player extends Entity {
                     }
                     break;
                 case "Door":
+                    break;
+                case "Health_potion":
+                    inventory.addItemStack(new ItemStack(ITEM_TYPE.HEALTH_POTION, 1));
+                    gp.obj[index] = null;
                     break;
             }
         }

@@ -37,24 +37,27 @@ public class GamePanel extends JPanel implements Runnable {
     public String percentVignette = "";
     //endregion
     public float deltaDraw = 0F;
-    TileManager tileM = new TileManager(this);
+    public TileManager tileM = new TileManager(this);
     Thread gameThread;
-    KeyManager keyH = new KeyManager();
-    MouseClickManager mouseKM = new MouseClickManager();
-    MouseMoveManager mouseML = new MouseMoveManager();
+    public KeyManager keyH = new KeyManager();
+    public MouseClickManager mouseKM = new MouseClickManager();
+    public MouseMoveManager mouseML = new MouseMoveManager();
     public ObjectManager objManager = new ObjectManager(this);
     public UI ui = new UI(this, mouseKM, mouseML);
     public CollisionChecker cChecker = new CollisionChecker(this, ui);
 
     public Player player = new Player(this, keyH, mouseKM, mouseML, ui);
+    int lastPlayerScreenX = player.screenX, lastPlayerScreenY = player.screenY;
+    Rectangle lastPlayerSolidArea = player.solidArea;
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
-    EnvironmentManager eManager = new EnvironmentManager(this);
-    Vignette vignette = new Vignette(this, 30, 30); //TODO: fix it! IDK waht is broken but its your problem now!
+    public EnvironmentManager eManager = new EnvironmentManager(this);
+    public Vignette vignette = new Vignette(this, 30, 30);
     //region world size
     public final int MAXWORLDCOL = 100;
     public final int MAXWORLDROW = 100;
     //endregion
     public int fps = 75;
+    public Graphics2D g2Debug;
 
     public GamePanel(JFrame mainFrame){
         Logger.log("setting up game-panel!", MESSAGE_PRIO.DEBUG);
@@ -133,11 +136,20 @@ public class GamePanel extends JPanel implements Runnable {
                 TILESIZE = ORIGINALTILESIZE * SCALE; //48px
             }
             if (lastScreenX != getWidth() || lastScreenY != getHeight()){
+                int playerX = player.screenX;
+                int playerY = player.screenY;
+                Rectangle playerBox = player.solidArea;
                 lastScreenX = getWidth();
                 lastScreenY = getHeight();
                 EnvironmentManager.updateAll();
                 vignette.update();
-                Logger.log(player.screenX + " : " + player.screenY, MESSAGE_PRIO.FINEST);
+                if (lastPlayerScreenX != playerX || lastPlayerScreenY != playerY || lastPlayerSolidArea != playerBox){
+                    player.ui.eraseRect(lastPlayerSolidArea, lastPlayerScreenX, lastPlayerScreenY, Color.RED);
+                    player.ui.drawRect(playerBox, playerX, playerY, Color.RED);
+                    lastPlayerScreenX = playerX;
+                    lastPlayerScreenY = playerY;
+                    lastPlayerSolidArea = playerBox;
+                }
             }
             //endregion
         }
@@ -157,6 +169,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        g2Debug = g2;
         //region tile
         long drawTile = System.nanoTime();
         tileM.draw(g2); //make sure to draw the tileMap first cause otherwise the map will layer on top of the player!
@@ -199,7 +212,7 @@ public class GamePanel extends JPanel implements Runnable {
         percentTiles = "Tiles: " + String.format("%.0f",(drawTileEnd - drawTile) / deltaDraw*100) + "%";
         percentPlayer = "Player: " + String.format("%.0f",(drawPlayerEnd - drawPlayer) / deltaDraw*100) + "%";
         percentEnvironment = "Environment: " + String.format("%.0f", (drawEnvironmentEnd - drawEnvironment)/deltaDraw * 100) + "%";
-        percentVignette = "Vignette: " + String.format("%.0f", (drawEnvironmentEnd - drawEnvironment)/deltaDraw * 100) + "%";
+        percentVignette = "Vignette: " + String.format("%.0f", (drawVignetteEnd - drawVignette)/deltaDraw * 100) + "%";
 
         //endregion
         //region avrgDrawTime

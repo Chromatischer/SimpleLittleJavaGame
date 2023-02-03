@@ -18,6 +18,7 @@ public class ItemStack {
     ITEM_TYPE type;
     BufferedImage key;
     BufferedImage chest;
+    BufferedImage health_potion;
 
     /**
      * constructor for an itemstack
@@ -30,6 +31,7 @@ public class ItemStack {
         try {
             key = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/object/key.png")));
             chest = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/object/chest.png")));
+            health_potion = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/res/object/health_potion.png")));
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -71,6 +73,7 @@ public class ItemStack {
         switch (type){
             case KEY -> {return key;}
             case CHEST -> {return chest;}
+            case HEALTH_POTION -> {return health_potion;}
         }
         return null;
     }
