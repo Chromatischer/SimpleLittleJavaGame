@@ -1,6 +1,6 @@
 package entity;
 
-import GUI.UI;
+import gui.UI;
 import inventory.INVENTORY_TYPE;
 import inventory.Inventory;
 import items.ITEM_TYPE;

@@ -1,9 +1,9 @@
 package main;
+
 import utilities.Logger;
 import utilities.MESSAGE_PRIO;
 
-import javax.swing.JFrame;
-import java.util.Arrays;
+import javax.swing.*;
 
 public class Main {
     public static MESSAGE_PRIO DEBUG = MESSAGE_PRIO.DEBUG;

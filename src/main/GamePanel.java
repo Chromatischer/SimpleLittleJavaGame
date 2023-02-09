@@ -1,7 +1,7 @@
 package main;
 
-import GUI.UI;
-import GUI.Vignette;
+import gui.UI;
+import gui.Vignette;
 import entity.Player;
 import environment.EnvironmentManager;
 import managers.KeyManager;
@@ -17,7 +17,6 @@ import javax.swing.plaf.DimensionUIResource;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    //TODO: make player hit-box variable with screen size!
     //region screen settings
     final int ORIGINALTILESIZE = 16;
     int SCALE = 3;
@@ -58,6 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
     //endregion
     public int fps = 75;
     public Graphics2D g2Debug;
+    public int collisionCount = 0;
 
     public GamePanel(JFrame mainFrame){
         Logger.log("setting up game-panel!", MESSAGE_PRIO.DEBUG);
@@ -234,5 +234,4 @@ public class GamePanel extends JPanel implements Runnable {
         //endregion
         g2.dispose(); //disposes of the recource it is using
     }
-    
 }

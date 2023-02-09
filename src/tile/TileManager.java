@@ -138,8 +138,9 @@ public class TileManager {
                 worldX - gp.TILESIZE < gp.player.worldX + gp.player.screenX &&
                 worldY + gp.TILESIZE > gp.player.worldY - gp.player.screenY &&
                 worldY - gp.TILESIZE < gp.player.worldY + gp.player.screenY){ //used for rendering only tiles shown on screen
-            g2.drawImage(tile[20].image, screenX, screenY, gp.TILESIZE, gp.TILESIZE, null);
-            g2.drawImage(tile[tileNum].image, screenX, screenY, gp.TILESIZE, gp.TILESIZE, null);
+
+                g2.drawImage(tile[20].image, screenX, screenY, gp.TILESIZE, gp.TILESIZE, null);
+                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.TILESIZE, gp.TILESIZE, null);
             }
             worldCol ++;
 

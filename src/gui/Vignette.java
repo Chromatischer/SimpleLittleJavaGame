@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 import main.GamePanel;
 import utilities.ImageNoise;
@@ -6,7 +6,6 @@ import utilities.Logger;
 import utilities.MESSAGE_PRIO;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;

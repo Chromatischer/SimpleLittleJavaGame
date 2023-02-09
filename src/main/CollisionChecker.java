@@ -1,17 +1,24 @@
 package main;
 
-import GUI.UI;
+import gui.UI;
 import entity.Entity;
 import org.jetbrains.annotations.NotNull;
+import utilities.Logger;
 
 import java.awt.*;
 
 public class CollisionChecker {
     GamePanel gp;
     UI ui;
+    Rectangle rectangle;
+    int draw1 = 0;
+    int draw2 = 0;
+    int draw3 = 0;
+    int draw4 = 0;
     public CollisionChecker(GamePanel gp, UI ui){
         this.gp = gp;
         this.ui = ui;
+        rectangle = new Rectangle(0,0,gp.TILESIZE,gp.TILESIZE);
     }
 
     /**
@@ -19,6 +26,7 @@ public class CollisionChecker {
      * @param entity the entity to check collision for
      */
     public void checkTile(@NotNull Entity entity){
+        gp.collisionCount = 0;
         //get the world position of the entitys collision box (only sides!)
         int entityLeftWorldX    = entity.worldX + entity.solidArea.x;
         int entityRightWorldX   = entity.worldX + entity.solidArea.x + entity.solidArea.width;
@@ -37,33 +45,76 @@ public class CollisionChecker {
                 entityTopRow = (entityTopWorldY - entity.speed) / gp.TILESIZE;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
-                ui.drawRect(0, 0,gp.TILESIZE, gp.TILESIZE, Color.ORANGE, tileNum1, tileNum2);
+                //region draw debug check-tiles
+                ui.eraseRect(rectangle, draw1, draw2, Color.DARK_GRAY);
+                ui.eraseRect(rectangle, draw3, draw4, Color.DARK_GRAY);
+                draw1 = entityLeftCol * gp.TILESIZE - gp.player.worldX + gp.player.screenX;
+                draw2 = entityTopRow * gp.TILESIZE - gp.player.worldY + gp.player.screenY;
+                ui.drawRect(rectangle, draw1, draw2, Color.DARK_GRAY);
+                draw3 = entityRightCol * gp.TILESIZE - gp.player.worldX + gp.player.screenX;
+                draw4 = entityTopRow * gp.TILESIZE - gp.player.worldY + gp.player.screenY;
+                ui.drawRect(rectangle, draw3, draw4, Color.DARK_GRAY);
+                //endregion
                 if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                     entity.collisionON = true;
+                    gp.collisionCount = 1;
                 }
             }
             case "down" -> {
                 entityBottomRow = (entityBottomWorldY + entity.speed) / gp.TILESIZE;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
                 tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
+                //region draw debug check-tiles
+                ui.eraseRect(rectangle, draw1, draw2, Color.DARK_GRAY);
+                ui.eraseRect(rectangle, draw3, draw4, Color.DARK_GRAY);
+                draw1 = entityLeftCol * gp.TILESIZE - gp.player.worldX + gp.player.screenX;
+                draw2 = entityBottomRow * gp.TILESIZE - gp.player.worldY + gp.player.screenY;
+                ui.drawRect(rectangle, draw1, draw2, Color.DARK_GRAY);
+                draw3 = entityRightCol * gp.TILESIZE - gp.player.worldX + gp.player.screenX;
+                draw4 = entityBottomRow * gp.TILESIZE - gp.player.worldY + gp.player.screenY;
+                ui.drawRect(rectangle, draw3, draw4, Color.DARK_GRAY);
+                //endregion
                 if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                     entity.collisionON = true;
+                    gp.collisionCount = 1;
                 }
             }
             case "left" -> {
                 entityLeftCol = (entityLeftWorldX - entity.speed) / gp.TILESIZE;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
+                //region draw debug check-tiles
+                ui.eraseRect(rectangle, draw1, draw2, Color.DARK_GRAY);
+                ui.eraseRect(rectangle, draw3, draw4, Color.DARK_GRAY);
+                draw1 = entityLeftCol * gp.TILESIZE - gp.player.worldX + gp.player.screenX;
+                draw2 = entityTopRow * gp.TILESIZE - gp.player.worldY + gp.player.screenY;
+                ui.drawRect(rectangle, draw1, draw2, Color.DARK_GRAY);
+                draw3 = entityLeftCol * gp.TILESIZE - gp.player.worldX + gp.player.screenX;
+                draw4 = entityBottomRow * gp.TILESIZE - gp.player.worldY + gp.player.screenY;
+                ui.drawRect(rectangle, draw3, draw4, Color.DARK_GRAY);
+                //endregion
                 if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                     entity.collisionON = true;
+                    gp.collisionCount = 1;
                 }
             }
             case "right" -> {
                 entityRightCol = (entityRightWorldX + entity.speed) / gp.TILESIZE;
                 tileNum1 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
                 tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
+                //region draw debug check-tiles
+                ui.eraseRect(rectangle, draw1, draw2, Color.DARK_GRAY);
+                ui.eraseRect(rectangle, draw3, draw4, Color.DARK_GRAY);
+                draw1 = entityRightCol * gp.TILESIZE - gp.player.worldX + gp.player.screenX;
+                draw2 = entityTopRow * gp.TILESIZE - gp.player.worldY + gp.player.screenY;
+                ui.drawRect(rectangle, draw1, draw2, Color.DARK_GRAY);
+                draw3 = entityRightCol * gp.TILESIZE - gp.player.worldX + gp.player.screenX;
+                draw4 = entityBottomRow * gp.TILESIZE - gp.player.worldY + gp.player.screenY;
+                ui.drawRect(rectangle, draw3, draw4, Color.DARK_GRAY);
+                //endregion
                 if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                     entity.collisionON = true;
+                    gp.collisionCount = 1;
                 }
             }
         }

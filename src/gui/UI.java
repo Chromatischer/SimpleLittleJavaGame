@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 import entity.HEALTH_EFFECTS;
 import inventory.Inventory;
@@ -57,6 +57,7 @@ public class UI {
     String percentUI = "";
     String drawTime = "";
     String percentVignette = "";
+    String collisionCount = "";
     //endregion
     int spaceX = 0;
     int spaceY = 0;
@@ -275,7 +276,7 @@ public class UI {
      * @param posX the x position to draw the rectangle at
      * @param posY the y position to draw the rectangle at
      */
-    public void drawRect(int x, int y, int width, int height, Color color, int posX, int posY){
+    public void drawRect(int x, int y, int width, int height,  int posX, int posY, Color color){
         for (int i = 0; i < drawRect.length; i++) {
             if (drawRect[i] == null){
                 drawRect[i] = new Rectangle(x + posX,y + posY,width,height);
@@ -313,7 +314,17 @@ public class UI {
                 }
             }
         }
-        Logger.log("done!", MESSAGE_PRIO.NORMAL);
+    }
+    public void changerectColor(Rectangle rectangle, int posX, int posY, Color startColor, Color endColor){
+        Rectangle actualRect = new Rectangle(rectangle.x + posX,rectangle.y + posY,rectangle.width,rectangle.height);
+        for (int i = 0; i < drawRect.length; i++) {
+            if (drawRect[i] != null) {
+                if (RectangleHelper.compare(drawRect[i], actualRect) && rectColor[i] == startColor) {
+                    rectColor[i] = endColor;
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -498,10 +509,12 @@ public class UI {
                 percentTiles = gp.percentTiles;
                 percentUI = gp.percentUI;
                 drawTime = "Time: " + (double) Math.round(gp.deltaDraw / 100_0F) / 100 + "ms";
+                collisionCount = "Collisions: " + gp.collisionCount;
                 noDebugDrawFrame = 0;
             }
             noDebugDrawFrame ++;
             g2.setFont(g2.getFont().deriveFont(15F));
+            g2.drawString(collisionCount, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(collisionCount, g2).getWidth()), Math.round(gp.getSize().getHeight() - 8 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(drawTime, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(drawTime, g2).getWidth()), Math.round(gp.getSize().getHeight() - 7 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentVignette, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentVignette, g2).getWidth()), Math.round(gp.getSize().getHeight() - 6 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentEnvironment, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentEnvironment, g2).getWidth()), Math.round(gp.getSize().getHeight() - 5 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
@@ -522,7 +535,6 @@ public class UI {
     public void createDialogue(int x, int y, String text){
         if (dialogueX == null && dialogueY == null && dialogueWidth == null && dialogueHeight == null && dialogueText == null && !setDialogueDisplayed) {
             g2.setFont(g2.getFont().deriveFont(gp.TILESIZE / 3F));
-            drawRect(0,0,32,48,Color.WHITE, x,y);
             int width       = (int) Math.max((Math.ceil(g2.getFontMetrics().getStringBounds(text, g2).getWidth() + gp.TILESIZE / 3D + gp.TILESIZE / 16D) / gp.TILESIZE) + 1, 2);
             int height      = (int) Math.max((Math.round(g2.getFontMetrics().getStringBounds(text, g2).getHeight() + gp.TILESIZE / 2D + gp.TILESIZE / 16D) / gp.TILESIZE),2);
             dialogueWidth   = width;
@@ -544,7 +556,6 @@ public class UI {
     public void createDialogue(int x, int y, String[] text){
         if (dialogueX == null && dialogueY == null && dialogueWidth == null && dialogueHeight == null && dialogueText == null && !setDialogueDisplayed) {
             g2.setFont(g2.getFont().deriveFont(gp.TILESIZE / 3F));
-            drawRect(0,0,32,48,Color.WHITE, x,y);
             int width       = (int) Math.max((Math.ceil(g2.getFontMetrics().getStringBounds(text[1], g2).getWidth() + gp.TILESIZE / 3D + gp.TILESIZE / 16D) / gp.TILESIZE) + 1, 2);
             int height      = (int) Math.max((Math.round(g2.getFontMetrics().getStringBounds(text[1], g2).getHeight() + gp.TILESIZE / 2D + gp.TILESIZE / 16D) / gp.TILESIZE) * text.length,2);
             dialogueWidth   = width;

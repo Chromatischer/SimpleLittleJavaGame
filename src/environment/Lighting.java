@@ -86,7 +86,7 @@ public class Lighting {
         //drawing the image to the screen
         g2.drawImage(darknessFilter, 0 , 0, null);
     }
-    public static void updateLighting(int circleSize){
+    public static void updateLighting(int circleSize) {
         if (gp != null){
             log("updating lighting!", MESSAGE_PRIO.DEBUG);
             darknessFilter = new BufferedImage(gp.getWidth(), gp.getHeight(), BufferedImage.TYPE_INT_ARGB); //creates an Image with the screens Dimesions
