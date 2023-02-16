@@ -28,11 +28,11 @@ public class UI {
     /**
      * the main font to use!
      */
-    Font ariel_40 = new Font("Arial", Font.BOLD, 30); //TODO: make font size adaptable
+    Font ariel_40 = new Font("Arial", Font.BOLD, 30);
     /**
      * the image for the KEY ui
      */
-    BufferedImage keyIMG; //TODO: remove when completely changed to inventory display
+    BufferedImage keyIMG;
     /**
      * the inventory background image
      */
@@ -315,6 +315,15 @@ public class UI {
             }
         }
     }
+
+    /**
+     * for the given values will look for a matching rectangle and change its color
+     * @param rectangle the rectangle to look for
+     * @param posX the x position of the rectangle
+     * @param posY the y position of the rectangle
+     * @param startColor the current color of the rectangle
+     * @param endColor the new color of the rectangle
+     */
     public void changerectColor(Rectangle rectangle, int posX, int posY, Color startColor, Color endColor){
         Rectangle actualRect = new Rectangle(rectangle.x + posX,rectangle.y + posY,rectangle.width,rectangle.height);
         for (int i = 0; i < drawRect.length; i++) {
@@ -641,6 +650,12 @@ public class UI {
             Logger.log(Arrays.toString(dialogueText) + "");
         }
     }
+
+    /**
+     * for a given input String returns the dimensions in px that the Dialogue will use up!
+     * @param text the String input to get the dimension for!
+     * @return the width and height as a Dimension which the Dialogue-field will have
+     */
     public Dimension getDialogueDimension(String text){
         int width = (int) Math.max((Math.ceil(g2.getFontMetrics().getStringBounds(text, g2).getWidth() + gp.TILESIZE / 3D + gp.TILESIZE / 16D) / gp.TILESIZE) + 1, 2);
         int height = (int) Math.max((Math.round(g2.getFontMetrics().getStringBounds(text, g2).getHeight() + gp.TILESIZE / 2D + gp.TILESIZE / 16D) / gp.TILESIZE),2);

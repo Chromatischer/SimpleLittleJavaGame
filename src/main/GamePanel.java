@@ -1,5 +1,6 @@
 package main;
 
+import environment.ParticleSystems;
 import gui.UI;
 import gui.Vignette;
 import entity.Player;
@@ -157,6 +158,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update(){
         player.update();
+        ParticleSystems.updateParticleSystems();
     }
 
     int avrgLenght = 80;

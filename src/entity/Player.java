@@ -1,5 +1,8 @@
 package entity;
 
+import environment.ParticleSystem;
+import environment.ParticleSystems;
+import gameExceptions.GameException;
 import gui.UI;
 import inventory.INVENTORY_TYPE;
 import inventory.Inventory;
@@ -58,6 +61,14 @@ public class Player extends Entity {
         worldX = 50*gp.TILESIZE;
         worldY = 50*gp.TILESIZE;
         setDirection("idle");
+        ParticleSystem particleSystem = null;
+        try {
+            particleSystem = new ParticleSystem(20, 50, false, false, "/res/ui/full_heart.png", 1, 0, screenX, screenY, 20, 20, 5, false);
+        } catch (GameException e){
+            e.printStackTrace();
+        }
+        assert particleSystem != null;
+        ParticleSystems.addParticleSystem(particleSystem);
     }
 
     /**

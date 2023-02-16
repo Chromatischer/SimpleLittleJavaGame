@@ -8,6 +8,7 @@ import java.awt.*;
 
 public class EnvironmentManager {
     static GamePanel gp;
+    ParticleSystems particleSystems;
     Lighting lighting;
     public EnvironmentManager(GamePanel gp){
         EnvironmentManager.gp = gp;
@@ -15,10 +16,12 @@ public class EnvironmentManager {
     public void setup(){
         //lighting = new Lighting(gp, 100);
         lighting = new Lighting(gp, 10000);
+        particleSystems = new ParticleSystems(gp);
     }
     public void draw(Graphics2D g2){
         try {
             lighting.draw(g2);
+            particleSystems.drawParticleSystems(g2);
         } catch (NullPointerException e){
             Logger.log("this is a reoccurring error in the EnvironmentManager class! I do not know why! But it works anyways! So ignore this!", MESSAGE_PRIO.ERROR);
             Logger.log("Message: " + e.getMessage(), MESSAGE_PRIO.ERROR);
