@@ -69,17 +69,25 @@ public class ParticleSystem{
         this.height = height;
         this.lifespan = lifespan;
         this.particleSize = particleSize;
-        particles = new Particle[amount];
+        particles = new Particle[this.amount];
         //endregion
 
         int current = 0;
-        for (int i = 0; i < amount; i++) {
-            int particleX = Random.randomAddSubtract(x, width, x, x + width);
-            int particleY = Random.randomAddSubtract(y, height, y, y + height);
+        for (int i = 0; i < this.amount; i++) {
+            int particleX = Random.randomAddSubtract(x + width/2, width/8, x, x + width);
+            int particleY = Random.randomAddSubtract(y + height/2, height/8, y, y + height);
             int singleParticleSize = Random.randomAddSubtract(particleSize, 5, 0, Math.max(width, height));
             int particleLifespan;
+            double particleVectorX = (Random.getRandom(0, 20)-10) / 10D ; //gives a value between -1 and 1
+            double particleVectorY = (Random.getRandom(0, 20)-10) / 10D ; //gives a value between -1 and 1
+            if (particleVectorX == 0){
+                particleVectorX = 0.2;
+            }
+            if (particleVectorY == 0){
+                particleVectorY = 0.2;
+            }
             if (randomLifespan){
-                particleLifespan = Random.randomAddSubtract(lifespan, 20, 0, MAX_LIFE_SPAN);
+                particleLifespan = Random.randomAddSubtract(lifespan, 1_500, 0, MAX_LIFE_SPAN);
             } else {
                 particleLifespan = lifespan;
             }
@@ -89,7 +97,7 @@ public class ParticleSystem{
             }
             BufferedImage particleImage = ImageManager.getTile(0, 16 * current, 16, 16, 16, 16 * images, imageFileMap);
 
-            particles[i] = new Particle(particleImage, singleParticleSize, particleX, particleY, 0, particleLifespan);
+            particles[i] = new Particle(particleImage, singleParticleSize, particleX, particleY, 0, particleLifespan, particleVectorX, particleVectorY);
             current ++;
         }
     }
@@ -101,21 +109,28 @@ public class ParticleSystem{
         }
     }
     void update(){
-        for (int i = 0; i < particles.length; i++){
-            if (particles[i] != null) {
-                particles[i].rotation = Random.randomAddSubtract(particles[i].rotation, 3, 0, 359);
-                particles[i].size = Random.randomAddSubtract(particles[i].size, 1, 0, 200);
-                //Logger.log(particle.x + ":" + particle.y, MESSAGE_PRIO.DEBUG);
-
-                particles[i].x = Random.randomAddSubtract(particles[i].x, spread, x, x + width);
-                particles[i].y = Random.randomAddSubtract(particles[i].y, spread, y, y + height);
-                //Logger.log(particle.x + ":" + particle.y, MESSAGE_PRIO.DEBUG);
-                //Logger.log("\n", MESSAGE_PRIO.DEBUG);
-                particles[i].decreseLifespan();
-                if (particles[i].lifespan <= 0) {
-                    particles[i] = null;
+        try {
+            for (int i = 0; i < particles.length; i++) {
+                if (particles[i] != null) {
+                    particles[i].setRotation(Random.randomAddSubtract(particles[i].getRotation(), (int) Math.round(3 * Math.max(particles[i].getVectorX(), particles[i].getVectorY())), 0, 359));
+                    particles[i].setSize(Random.randomAddSubtract(particles[i].getSize(), 1, 0, 200));
+                    //Logger.log(particle.x + ":" + particle.y, MESSAGE_PRIO.DEBUG);
+                    if(particles[i].getX() > x && particles[i].getX() < x + width) {
+                        particles[i].setX((int) Math.round(particles[i].getX() + particles[i].getVectorX() * Random.getRandom(0, spread)));
+                    }
+                    if (particles[i].getY() > y && particles[i].getY() < y + height) {
+                        particles[i].setY((int) Math.round(particles[i].getY() + particles[i].getVectorY() * Random.getRandom(0, spread)));
+                    }
+                    //Logger.log(particle.x + ":" + particle.y, MESSAGE_PRIO.DEBUG);
+                    //Logger.log("\n", MESSAGE_PRIO.DEBUG);
+                    particles[i].decreseLifespan();
+                    if (particles[i].getLifespan() <= 0) {
+                        particles[i] = null;
+                    }
                 }
             }
+        } catch (GameException e){
+            e.printStackTrace();
         }
     }
     public boolean isDead(){

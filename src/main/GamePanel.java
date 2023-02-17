@@ -1,6 +1,7 @@
 package main;
 
 import environment.ParticleSystems;
+import gameExceptions.GameException;
 import gui.UI;
 import gui.Vignette;
 import entity.Player;
@@ -90,7 +91,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run(){
-        double drawInterval = 1_000_000_000F/fps;
+
+        double drawInterval = 1_000_000_000F / fps;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -99,7 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
         int drawCount = 0;
         int lastScreenX = 0, lastScreenY = 0;
 
-        while (gameThread != null){
+        while (gameThread != null) {
             //region timing variables
             currentTime = System.nanoTime();
 
@@ -110,17 +112,17 @@ public class GamePanel extends JPanel implements Runnable {
             //endregion
 
             //region time-based operations
-            if (delta >= 1){ //updating and redrawing the game at 60FPS
+            if (delta >= 1) { //updating and redrawing the game at 60FPS
                 repaint();
-                delta --;
-                drawCount ++;
+                delta--;
+                drawCount++;
             }
-            if (timer2 >= 1_000_000 ) { //updates the game every milisecond not based on FPS
+            if (timer2 >= 1_000_000) { //updates the game every milisecond not based on FPS
                 update();
                 timer2 = 0;
             }
 
-            if (timer >= 1_000_000_000){ //displaying the FPS every 1 second
+            if (timer >= 1_000_000_000) { //displaying the FPS every 1 second
                 mainFrame2.setTitle("2D Game" + " (" + drawCount + "FPS)");
                 drawCount = 0;
                 timer = 0;
@@ -128,15 +130,15 @@ public class GamePanel extends JPanel implements Runnable {
             //endregion
 
             //region function to control the resizability of the game!
-            if ((MAXSCREENCOL * (TILESIZE + ORIGINALTILESIZE) < getSize().width) && (MAXSCREENROW * (TILESIZE + ORIGINALTILESIZE) < getSize().height)){
-                SCALE ++;
+            if ((MAXSCREENCOL * (TILESIZE + ORIGINALTILESIZE) < getSize().width) && (MAXSCREENROW * (TILESIZE + ORIGINALTILESIZE) < getSize().height)) {
+                SCALE++;
                 TILESIZE = ORIGINALTILESIZE * SCALE; //48px
             }
-            if ((MAXSCREENCOL * (TILESIZE - ORIGINALTILESIZE) > getSize().width) && (MAXSCREENROW * (TILESIZE - ORIGINALTILESIZE) > getSize().height)){
-                SCALE --;
+            if ((MAXSCREENCOL * (TILESIZE - ORIGINALTILESIZE) > getSize().width) && (MAXSCREENROW * (TILESIZE - ORIGINALTILESIZE) > getSize().height)) {
+                SCALE--;
                 TILESIZE = ORIGINALTILESIZE * SCALE; //48px
             }
-            if (lastScreenX != getWidth() || lastScreenY != getHeight()){
+            if (lastScreenX != getWidth() || lastScreenY != getHeight()) {
                 int playerX = player.screenX;
                 int playerY = player.screenY;
                 Rectangle playerBox = player.solidArea;
@@ -144,7 +146,7 @@ public class GamePanel extends JPanel implements Runnable {
                 lastScreenY = getHeight();
                 EnvironmentManager.updateAll();
                 vignette.update();
-                if (lastPlayerScreenX != playerX || lastPlayerScreenY != playerY || lastPlayerSolidArea != playerBox){
+                if (lastPlayerScreenX != playerX || lastPlayerScreenY != playerY || lastPlayerSolidArea != playerBox) {
                     player.ui.eraseRect(lastPlayerSolidArea, lastPlayerScreenX, lastPlayerScreenY, Color.RED);
                     player.ui.drawRect(playerBox, playerX, playerY, Color.RED);
                     lastPlayerScreenX = playerX;

@@ -42,12 +42,12 @@ public class ParticleSystems {
             if (particleSystems[i] != null) {
                 particleSystems[i].update();
                 if (particleSystems[i].isDead()){
-                    particleSystems[i] = null;
+                    killParticleSystem(i);
                 }
             }
         }
     }
-    public void killParticleSystem(int position){
+    public static void killParticleSystem(int position){
         Logger.log("killing particle System");
         particleSystems[position] = null;
     }

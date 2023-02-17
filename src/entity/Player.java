@@ -81,7 +81,7 @@ public class Player extends Entity {
         Logger.log(Arrays.toString(numberCount));
         Logger.log(count + "");
         try {
-            particleSystem = new ParticleSystem(20, 5000, false, false, "/res/ui/full_heart.png", 1, 3, screenX, screenY, 4*48, 4*48, 5, false);
+            particleSystem = new ParticleSystem(20, 1_000, true, true, "/res/ui/full_heart.png", 1, 1, 0, 0, 10*48, 10*48, 5, false);
         } catch (GameException e){
             e.printStackTrace();
         }

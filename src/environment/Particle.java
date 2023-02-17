@@ -11,11 +11,12 @@ import java.awt.image.BufferedImage;
 
 public class Particle {
     BufferedImage image;
-    int size;
-    int x, y;
-    int rotation;
-    int lifespan;
-    public Particle(BufferedImage image, int size, int x, int y, int rotation, int lifespan) throws GameException {
+    private int size;
+    private int x, y;
+    private int rotation;
+    private int lifespan;
+    private double vectorX, vectorY;
+    public Particle(BufferedImage image, int size, int x, int y, int rotation, int lifespan, double vectorX, double vectorY) throws GameException {
         if (size < 0){
             throw new InvalidParameterException("size value out of bounds expected: size > 0");
         }
@@ -29,10 +30,16 @@ public class Particle {
             throw new InvalidParameterException("y value out of bounds expected: y > 0");
         }
         if (rotation > 359 || rotation < 0){
-            throw new InvalidParameterException("rotation value out of bounds expected: 0 > rotation < 359 for value: " + rotation);
+            throw new InvalidParameterException("rotation value out of bounds expected: 0 < rotation < 359 for value: " + rotation);
         }
         if (lifespan > ParticleSystem.MAX_LIFE_SPAN || lifespan < 0){
             throw new InvalidParameterException("lifespan value out of bounds expected:" + ParticleSystem.MAX_LIFE_SPAN +  " > lifespan > 0 for value: " + lifespan);
+        }
+        if (vectorX > 1 || vectorX < -1){
+            throw new InvalidParameterException("vectorX value out of bounds expected: 0 < vectorX < 1 for value: " + vectorX);
+        }
+        if (vectorY > 1 || vectorY < -1){
+            throw new InvalidParameterException("vectorY value out of bounds expected: 0 < vectorY < 1 for value: " + vectorY);
         }
         this.image = image;
         this.size = size;
@@ -40,6 +47,8 @@ public class Particle {
         this.y = y;
         this.rotation = rotation;
         this.lifespan = lifespan;
+        this.vectorX = vectorX;
+        this.vectorY = vectorY;
     }
     public void decreseLifespan(){
         if (lifespan > 0){
@@ -58,11 +67,36 @@ public class Particle {
         }
         this.y = y;
     }
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
+    public void setSize(int size) throws InvalidParameterException{
+        if (size < 0){
+            throw new InvalidParameterException("size value out of bounds expected: size > 0");
+        }
+        this.size = size;
+    }
+    public int getSize(){
+        return size;
+    }
+    public double getVectorX(){
+        return vectorX;
+    }
+    public double getVectorY() {
+        return vectorY;
+    }
+
     public void setRotation(int rotation) throws InvalidParameterException {
         if (rotation < 0 || rotation > 359){
             throw new InvalidParameterException("rotation value out of bounds expected: 0 > rotation < 359 for value: " + rotation);
         }
         this.rotation = rotation;
+    }
+    public int getRotation(){
+        return rotation;
     }
     public int getLifespan(){
         return lifespan;
