@@ -11,7 +11,7 @@ public class Random {
         if (min == max){
             return min;
         }
-        return Math.toIntExact(Math.round(Math.random()*(max-min))) + min;
+        return (int) Math.round((Math.random() * (min + max)));
     }
 
     /**
@@ -39,14 +39,15 @@ public class Random {
     public static int randomAddSubtract(int startValue, int delta, int min, int max){
         int returnVal;
         if (getRandomBool()){
-            returnVal = startValue - delta;
+            returnVal = startValue - getRandom(0, delta);
         } else {
-            returnVal = startValue + delta;
+            returnVal = startValue + getRandom(0, delta);
         }
-        if (returnVal >= min && returnVal <= max){
+
+        if (returnVal > min && returnVal < max){
             return returnVal;
         } else {
-            return 0;
+            return min;
         }
     }
 }

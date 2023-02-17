@@ -4,7 +4,9 @@ import gameExceptions.GameException;
 import gameExceptions.InvalidParameterException;
 import main.GamePanel;
 import managers.ImageManager;
+import utilities.ArrayHelper;
 import utilities.Logger;
+import utilities.MESSAGE_PRIO;
 import utilities.Random;
 
 import java.awt.*;
@@ -15,10 +17,10 @@ public class ParticleSystem{
      * max lifespan in ms
      */
     public static final int MAX_LIFE_SPAN = 10_000;
-    int amount;
-    String imageFileMap;
-    Particle[] particles;
-    int spread;
+    private String imageFileMap;
+    private Particle[] particles;
+    private int x, y, width, height, lifespan, images, particleSize, amount, spread;
+    private String debugString, oldDebugString;
     public ParticleSystem(int amount, int lifespan, boolean randomAmount, boolean randomLifespan, String imageFileMap, int images, int spread, int x, int y, int width, int height, int particleSize, boolean randomParticleSize) throws GameException {
         Logger.log("creating new particle System! with values: ");
         Logger.log("amount: " + amount + " lifespan: " + lifespan + " randomAmount? " + randomAmount + " randomLifespan? " + randomLifespan + " image location: '" + imageFileMap + "' image count: " + images + " spread: " + spread + " x location: " + x + " y location: " + y + " width: " + width + " height: " + height + " particle Size: " + particleSize + " random particle Size? " + randomParticleSize);
@@ -58,17 +60,26 @@ public class ParticleSystem{
         } else {
             this.amount = amount;
         }
+        //region setting variables accordingly
         this.spread = spread;
         this.imageFileMap = imageFileMap;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.lifespan = lifespan;
+        this.particleSize = particleSize;
         particles = new Particle[amount];
+        //endregion
+
         int current = 0;
         for (int i = 0; i < amount; i++) {
-            int particleX = x + Random.randomAddSubtract(x, width, 0, width);
-            int particleY = y + Random.randomAddSubtract(y, height, 0, height);
-            int singleParticleSize = particleSize + Random.randomAddSubtract(particleSize, 5, 0, Math.max(width, height));
+            int particleX = Random.randomAddSubtract(x, width, x, x + width);
+            int particleY = Random.randomAddSubtract(y, height, y, y + height);
+            int singleParticleSize = Random.randomAddSubtract(particleSize, 5, 0, Math.max(width, height));
             int particleLifespan;
             if (randomLifespan){
-                particleLifespan = lifespan + Random.randomAddSubtract(lifespan, 20, 0, MAX_LIFE_SPAN);
+                particleLifespan = Random.randomAddSubtract(lifespan, 20, 0, MAX_LIFE_SPAN);
             } else {
                 particleLifespan = lifespan;
             }
@@ -90,14 +101,20 @@ public class ParticleSystem{
         }
     }
     void update(){
-        for (Particle particle : particles){
-            particle.rotation = particle.rotation + Random.randomAddSubtract(particle.rotation, 3, 0, 359);
-            particle.size = particle.size + Random.randomAddSubtract(particle.size, 1, 0, 200);
-            particle.x = particle.x + 1;
-            particle.y = particle.y + 1;
-            particle.lifespan --;
-            if (particle.lifespan <= 0){
-                particle = null;
+        for (int i = 0; i < particles.length; i++){
+            if (particles[i] != null) {
+                particles[i].rotation = Random.randomAddSubtract(particles[i].rotation, 3, 0, 359);
+                particles[i].size = Random.randomAddSubtract(particles[i].size, 1, 0, 200);
+                //Logger.log(particle.x + ":" + particle.y, MESSAGE_PRIO.DEBUG);
+
+                particles[i].x = Random.randomAddSubtract(particles[i].x, spread, x, x + width);
+                particles[i].y = Random.randomAddSubtract(particles[i].y, spread, y, y + height);
+                //Logger.log(particle.x + ":" + particle.y, MESSAGE_PRIO.DEBUG);
+                //Logger.log("\n", MESSAGE_PRIO.DEBUG);
+                particles[i].decreseLifespan();
+                if (particles[i].lifespan <= 0) {
+                    particles[i] = null;
+                }
             }
         }
     }
@@ -108,5 +125,63 @@ public class ParticleSystem{
             }
         }
         return true;
+    }
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
+    public int getLifespan(){
+        return lifespan;
+    }
+    public int getWidth(){
+        return width;
+    }
+    public int getHeight(){
+        return height;
+    }
+    public int getImages(){
+        return images;
+    }
+    public int getParticleSize(){
+        return particleSize;
+    }
+    public int getAmount(){
+        return amount;
+    }
+    public int getSpread(){
+        return spread;
+    }
+    public int getLifeSpan(){
+        return lifespan;
+    }
+    public int getCurrentAmount(){
+        return ArrayHelper.lengthNonNull(particles);
+    }
+
+    public Particle[] getParticles() {
+        return particles;
+    }
+    public String getDebugString(){
+        oldDebugString = debugString;
+        int avrgLifeSpan = 0;
+        int[] lifeSpans = new int[particles.length];
+        for (int i = 0; i < particles.length; i++){
+            if (particles[i] != null) {
+                lifeSpans[i] = particles[i].getLifespan();
+            } else {
+                lifeSpans[i] = 0;
+            }
+        }
+        for (int lifeSpan : lifeSpans) {
+            avrgLifeSpan += lifeSpan;
+        }
+        avrgLifeSpan = Math.round(avrgLifeSpan / lifeSpans.length);
+        debugString = "x: " + x + " y: " + y + " width: " + width + " height: " + height + " isDead: " + isDead() + " lifeSpan: " + lifespan + " amount: " + amount + " spread: " + spread + " non dead particles: " + ArrayHelper.lengthNonNull(particles) + " avrgLifeSpan: " + avrgLifeSpan + " Test: " + Random.randomAddSubtract(100, 10, 0, 200);
+        return debugString;
+    }
+    public String getOldDebugString(){
+        return oldDebugString;
     }
 }

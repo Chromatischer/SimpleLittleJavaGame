@@ -16,7 +16,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static main.Main.DEBUG;
@@ -103,6 +105,7 @@ public class UI {
     Integer dialogueY, dialogueX, dialogueWidth, dialogueHeight;
     boolean setDialogueDisplayed;
     String[] dialogueText;
+    List<String> debuggingStrings = new ArrayList<>();
 
     public UI(GamePanel gp, MouseClickManager clickManager, MouseMoveManager moveListener) {
         this.gp = gp;
@@ -532,6 +535,11 @@ public class UI {
             g2.drawString(percentTiles, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentTiles, g2).getWidth()), Math.round(gp.getSize().getHeight() - 2 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentUI, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentUI, g2).getWidth()), Math.round(gp.getSize().getHeight() - 1 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
 
+            for (int i = 0; i < debuggingStrings.size(); i++){
+                int pos = -(i+1);
+                g2.setFont(g2.getFont().deriveFont(10F));
+                g2.drawString(debuggingStrings.get(i), 0, Math.round(gp.getSize().getHeight() + pos * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            }
         }
     }
 
@@ -660,5 +668,18 @@ public class UI {
         int width = (int) Math.max((Math.ceil(g2.getFontMetrics().getStringBounds(text, g2).getWidth() + gp.TILESIZE / 3D + gp.TILESIZE / 16D) / gp.TILESIZE) + 1, 2);
         int height = (int) Math.max((Math.round(g2.getFontMetrics().getStringBounds(text, g2).getHeight() + gp.TILESIZE / 2D + gp.TILESIZE / 16D) / gp.TILESIZE),2);
         return new Dimension(width,height);
+    }
+    public void addDebugString(String string){
+        debuggingStrings.add(string);
+    }
+    public void removeDebugString(String string){
+        debuggingStrings.remove(string);
+    }
+    public void updateDebugString(String oldString, String string){
+        if (debuggingStrings.contains(oldString)){
+            debuggingStrings.set(debuggingStrings.indexOf(oldString), string);
+        } else {
+            addDebugString(string);
+        }
     }
 }

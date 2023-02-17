@@ -15,10 +15,12 @@ import managers.MouseMoveManager;
 import org.jetbrains.annotations.NotNull;
 import utilities.Logger;
 import utilities.MESSAGE_PRIO;
+import utilities.Random;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Player extends Entity {
@@ -62,8 +64,24 @@ public class Player extends Entity {
         worldY = 50*gp.TILESIZE;
         setDirection("idle");
         ParticleSystem particleSystem = null;
+        int num = 5;
+        int delta = 5;
+        int count = 0;
+        int[] values = new int[500];
+        int[] numberCount = new int[10];
+        for (int i = 0; i < 500; i++) {
+            values[i] = Random.randomAddSubtract(num, delta, 0, 10);
+        }
+        for (int value : values) {
+            numberCount[value]++;
+        }
+        for (int j : numberCount) {
+            count = count + j;
+        }
+        Logger.log(Arrays.toString(numberCount));
+        Logger.log(count + "");
         try {
-            particleSystem = new ParticleSystem(20, 50, false, false, "/res/ui/full_heart.png", 1, 0, screenX, screenY, 20, 20, 5, false);
+            particleSystem = new ParticleSystem(20, 5000, false, false, "/res/ui/full_heart.png", 1, 3, screenX, screenY, 4*48, 4*48, 5, false);
         } catch (GameException e){
             e.printStackTrace();
         }
