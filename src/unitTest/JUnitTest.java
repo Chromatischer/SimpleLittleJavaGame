@@ -1,11 +1,8 @@
 package unitTest;
 
-import environment.EnvironmentManager;
-import environment.Lighting;
 import main.GamePanel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utilities.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +30,7 @@ public class JUnitTest {
     }
     @Test
     void updateEnvironment(){
-        EnvironmentManager.updateAll();
+        gp.eManager.updateLighting();
     }
     @Test
     void uiDraw(){

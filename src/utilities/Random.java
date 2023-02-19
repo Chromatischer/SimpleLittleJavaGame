@@ -22,6 +22,10 @@ public class Random {
         return getRandom(0, 1) == 1;
     }
 
+    public static boolean getRandomBool(int percentage){
+        return getRandom(0, 100) <= percentage;
+    }
+
     /**
      * returns the delta added to the start-value or the delta subtracted from the start-value
      * @param startValue the value to add or subtract the delta from

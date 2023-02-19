@@ -60,6 +60,9 @@ public class UI {
     String drawTime = "";
     String percentVignette = "";
     String collisionCount = "";
+    String drawCount = "";
+    String currentFPS = "";
+    String maxDrawTime = "";
     //endregion
     int spaceX = 0;
     int spaceY = 0;
@@ -138,16 +141,6 @@ public class UI {
     }
 
     /**
-     * displays a message on screen for 3 seconds at a time!
-     *
-     * @param text the message to be displayed in the middle of the screen
-     */
-    public void showMessage(String text) {
-        messageON = true;
-        createDialogue((gp.getWidth() - getDialogueDimension(text).width * gp.TILESIZE) / 2, (gp.getHeight() - getDialogueDimension(text).height * gp.TILESIZE) / 4, text);
-    }
-
-    /**
      * the draw methode of the GUI
      */
     public void draw(@NotNull Graphics2D g2) { //dont initiate things here!
@@ -163,6 +156,7 @@ public class UI {
         }
         drawAllDialogue();
         drawAllRects();
+        drawFlashScreen();
     }
 
     /**
@@ -307,7 +301,20 @@ public class UI {
     }
 
     public void eraseRect(Rectangle rectangle, int posX, int posY, Color color){
-        Rectangle actualRect = new Rectangle(rectangle.x + posX,rectangle.y + posY,rectangle.width,rectangle.height);
+        Rectangle actualRect = new Rectangle(rectangle.x + posX,rectangle.y + posY, rectangle.width, rectangle.height);
+        for (int i = 0; i < drawRect.length; i++) {
+            if (drawRect[i] != null) {
+                if (RectangleHelper.compare(drawRect[i], actualRect) && rectColor[i] == color) {
+                    drawRect[i] = null;
+                    rectColor[i] = null;
+                    break;
+                }
+            }
+        }
+    }
+
+    public void eraseRect(int x, int y, int width, int height, int posX, int posY, Color color){
+        Rectangle actualRect = new Rectangle(x + posX, y + posY, width, height);
         for (int i = 0; i < drawRect.length; i++) {
             if (drawRect[i] != null) {
                 if (RectangleHelper.compare(drawRect[i], actualRect) && rectColor[i] == color) {
@@ -521,13 +528,19 @@ public class UI {
                 percentTiles = gp.percentTiles;
                 percentUI = gp.percentUI;
                 drawTime = "Time: " + (double) Math.round(gp.deltaDraw / 100_0F) / 100 + "ms";
+                drawCount = "Frames: " + gp.drawCount;
+                currentFPS = "FPS: " + gp.currentFPS;
+                maxDrawTime = "Max: " + 16 + "ms (60FPS)";
                 collisionCount = "Collisions: " + gp.collisionCount;
                 noDebugDrawFrame = 0;
             }
             noDebugDrawFrame ++;
             g2.setFont(g2.getFont().deriveFont(15F));
-            g2.drawString(collisionCount, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(collisionCount, g2).getWidth()), Math.round(gp.getSize().getHeight() - 8 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
-            g2.drawString(drawTime, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(drawTime, g2).getWidth()), Math.round(gp.getSize().getHeight() - 7 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(currentFPS, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(currentFPS, g2).getWidth()), Math.round(gp.getSize().getHeight() - 11 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(drawCount, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(drawCount, g2).getWidth()), Math.round(gp.getSize().getHeight() - 10 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(collisionCount, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(collisionCount, g2).getWidth()), Math.round(gp.getSize().getHeight() - 9 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(drawTime, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(drawTime, g2).getWidth()), Math.round(gp.getSize().getHeight() - 8 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
+            g2.drawString(maxDrawTime, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(maxDrawTime, g2).getWidth()), Math.round(gp.getSize().getHeight() - 7 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentVignette, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentVignette, g2).getWidth()), Math.round(gp.getSize().getHeight() - 6 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentEnvironment, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentEnvironment, g2).getWidth()), Math.round(gp.getSize().getHeight() - 5 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
             g2.drawString(percentObjects, Math.round(gp.getSize().width - g2.getFontMetrics().getStringBounds(percentObjects, g2).getWidth()), Math.round(gp.getSize().getHeight() - 4 * g2.getFontMetrics().getStringBounds("empTy", g2).getHeight()));
@@ -680,6 +693,13 @@ public class UI {
             debuggingStrings.set(debuggingStrings.indexOf(oldString), string);
         } else {
             addDebugString(string);
+        }
+    }
+    public void drawFlashScreen() {
+        if (DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal() && ((double) Math.round(gp.deltaDraw / 100_0F) / 100 > 16.6666)) {
+            drawRect(0,0,gp.getWidth() -1,gp.getHeight() -1,0,0, Color.RED);
+        } else {
+            eraseRect(0,0,gp.getWidth() -1,gp.getHeight() -1,0,0, Color.RED);
         }
     }
 }

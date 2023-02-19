@@ -1,7 +1,5 @@
 package main;
 
-import environment.ParticleSystems;
-import gameExceptions.GameException;
 import gui.UI;
 import gui.Vignette;
 import entity.Player;
@@ -58,6 +56,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int MAXWORLDROW = 100;
     //endregion
     public int fps = 75;
+    public int drawCount = 0;
+    public int currentFPS = 0;
+    public long currentTime, lastTime;
     public Graphics2D g2Debug;
     public int collisionCount = 0;
 
@@ -94,11 +95,9 @@ public class GamePanel extends JPanel implements Runnable {
 
         double drawInterval = 1_000_000_000F / fps;
         double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
+        lastTime = System.nanoTime();
         long timer = 0;
         long timer2 = 0;
-        int drawCount = 0;
         int lastScreenX = 0, lastScreenY = 0;
 
         while (gameThread != null) {
@@ -112,7 +111,7 @@ public class GamePanel extends JPanel implements Runnable {
             //endregion
 
             //region time-based operations
-            if (delta >= 1) { //updating and redrawing the game at 60FPS
+            if (delta >= 1) { //updating and redrawing the game at FPS
                 repaint();
                 delta--;
                 drawCount++;
@@ -124,6 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             if (timer >= 1_000_000_000) { //displaying the FPS every 1 second
                 mainFrame2.setTitle("2D Game" + " (" + drawCount + "FPS)");
+                currentFPS = drawCount;
                 drawCount = 0;
                 timer = 0;
             }
@@ -144,7 +144,7 @@ public class GamePanel extends JPanel implements Runnable {
                 Rectangle playerBox = player.solidArea;
                 lastScreenX = getWidth();
                 lastScreenY = getHeight();
-                EnvironmentManager.updateAll();
+                eManager.updateLighting();
                 vignette.update();
                 if (lastPlayerScreenX != playerX || lastPlayerScreenY != playerY || lastPlayerSolidArea != playerBox) {
                     player.ui.eraseRect(lastPlayerSolidArea, lastPlayerScreenX, lastPlayerScreenY, Color.RED);
@@ -160,7 +160,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update(){
         player.update();
-        ParticleSystems.updateParticleSystems();
+        eManager.updateParticleSystems();
     }
 
     int avrgLenght = 80;
