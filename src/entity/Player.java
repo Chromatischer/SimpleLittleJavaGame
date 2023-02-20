@@ -54,10 +54,14 @@ public class Player extends Entity {
         health = maxHealth;
         inventory = new Inventory(27, INVENTORY_TYPE.PLAYER);
         ui.drawHealth(health, HEALTH_EFFECTS.NORMAL);
+        damageValue = 1;
         //starting point on the map
         worldX = 50 * gp.TILESIZE;
         worldY = 50 * gp.TILESIZE;
         setDirection("idle");
+        Logger.log(health + "");
+        dealDamage(10, false);
+        Logger.log(health + "");
     }
 
     /**
@@ -91,6 +95,7 @@ public class Player extends Entity {
         solidArea.setRect(gp.TILESIZE / 6D, gp.TILESIZE / 3D, gp.TILESIZE / 1.5, gp.TILESIZE / 2D);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
+        ui.drawHealth(health, HEALTH_EFFECTS.NORMAL);
 
         objIndex = gp.cChecker.checkObject(this, true);
         if (updateCount >= 60) { //executed every 60 miliseconds

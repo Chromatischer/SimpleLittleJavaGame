@@ -1,5 +1,6 @@
 package tile;
 
+import gameExceptions.InvalidParameterException;
 import main.GamePanel;
 import managers.ImageManager;
 import utilities.Logger;
@@ -8,10 +9,7 @@ import utilities.MESSAGE_PRIO;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Objects;
 
 public class TileManager {
@@ -116,6 +114,34 @@ public class TileManager {
         }
         Logger.log("reading map file: DONE", MESSAGE_PRIO.NORMAL);
     }
+    public void writeMap(String fileMap){
+        Logger.log("writing map file!", MESSAGE_PRIO.DEBUG);
+        try {
+            FileWriter fw = new FileWriter(fileMap);
+            assert fw != null;
+            BufferedWriter bw = new BufferedWriter(fw);
+            StringBuilder outputString = new StringBuilder();
+            int col = 0;
+            int row = 0;
+            while (col < gp.MAXWORLDCOL && row < gp.MAXWORLDROW){
+                while (col < gp.MAXWORLDCOL){
+                    outputString.append(" ").append(mapTileNum[col][row]);
+                    col++;
+                }
+                if (col == gp.MAXWORLDCOL) {
+                    outputString.append("\n");
+                    col = 0;
+                    row++;
+                }
+            }
+            String outputStringAsStr = outputString.toString();
+            bw.write(outputStringAsStr);
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        Logger.log("writing map file: DONE", MESSAGE_PRIO.NORMAL);
+    }
 
     /**
      * the draw function for the background
@@ -149,5 +175,11 @@ public class TileManager {
                 worldRow ++;
             }
         }
+    }
+    public void setMapTile(int col, int row, int num) throws InvalidParameterException {
+        if (num < 0 || num > 100){
+            throw new InvalidParameterException("image-num out of bounds, expected 0 < image-num < 100");
+        }
+        mapTileNum[col] [row] = num;
     }
 }

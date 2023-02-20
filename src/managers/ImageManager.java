@@ -25,7 +25,7 @@ public class ImageManager {
      */
     public static BufferedImage getTile(int x, int y, int sizeX, int sizeY, int imgX, int imgY, String tileMapLocation){
         BufferedImage nullImg = null;
-        Logger.log("reading file: " + tileMapLocation, MESSAGE_PRIO.DEBUG);
+        Logger.log("reading file: " + tileMapLocation, MESSAGE_PRIO.FINER);
         BufferedImage image = null;
         try {
             image = ImageIO.read(Objects.requireNonNull(ImageManager.class.getResourceAsStream(tileMapLocation)));

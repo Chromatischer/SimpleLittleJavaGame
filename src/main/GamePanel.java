@@ -4,6 +4,7 @@ import gui.UI;
 import gui.Vignette;
 import entity.Player;
 import environment.EnvironmentManager;
+import managers.ImageManager;
 import managers.KeyManager;
 import managers.MouseClickManager;
 import managers.MouseMoveManager;

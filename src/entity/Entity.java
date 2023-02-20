@@ -3,6 +3,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.awt.Rectangle;
 
+import environment.ParticleSystem;
+import environment.ParticleSystems;
+import gameExceptions.GameException;
 import main.GamePanel;
 import inventory.Inventory;
 import gui.UI;
@@ -69,6 +72,10 @@ public class Entity {
      * used for the calculations of the animation frame methode
      */
     long currentTime, lastTime, timer;
+    /**
+     * a value of 0-1 indicating the amount of damage the entity receives (0 is less Damage)
+     */
+    protected double damageValue;
 
     /**
      * draws the Entity using the specified image at the screenX and screenY position with the TILESIZE size from the Gamepanel class
@@ -232,5 +239,24 @@ public class Entity {
      */
     public double getHealth(){
         return health;
+    }
+
+    /**
+     * deals a specified amount of damage to an Entity * the damageValue (range of that is 0-1 0 is less Damage)
+     * @param damage the original Damage to deal to the entity
+     * @param trueDamage if this flag is set, the damage can NOT be reduced!
+     */
+    public void dealDamage(int damage, boolean trueDamage){
+        if (!trueDamage) {
+            health -= Math.round(damage * damageValue);
+        } else {
+            health -= damage;
+        }
+        try {
+            ParticleSystems.addParticleSystem(new ParticleSystem(50, false, 500, true, "/res/object/key.png", 1, (worldX / gp.TILESIZE), (worldY / gp.TILESIZE), 2 * gp.TILESIZE, 2 * gp.TILESIZE, 18, true, 2.5, false, 1));
+        } catch (GameException e){
+            e.printStackTrace();
+        }
+
     }
 }
