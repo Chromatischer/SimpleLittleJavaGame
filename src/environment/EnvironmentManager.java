@@ -7,11 +7,11 @@ import utilities.MESSAGE_PRIO;
 import java.awt.*;
 
 public class EnvironmentManager {
-    static GamePanel gp;
+    GamePanel gp;
     private ParticleSystems particleSystems;
-    Lighting lighting;
+    private Lighting lighting;
     public EnvironmentManager(GamePanel gp){
-        EnvironmentManager.gp = gp;
+        this.gp = gp;
     }
     /**
      * sets up all the necessary things  for the Environment-manager
@@ -24,16 +24,14 @@ public class EnvironmentManager {
 
     /**
      * draws the environment to the Screen e.g: Lighting, particles, etc.
+     * <p>
+     *     NOTE: there is still an unfixed nullpointer being thrown everytime, the game starts up!
+     * </p>
      * @param g2 the Graphics to draw on
      */
     public void draw(Graphics2D g2){
-        try {
-            lighting.draw(g2);
-            particleSystems.drawParticleSystems(g2);
-        } catch (NullPointerException e){
-            Logger.log("this is a reoccurring error in the EnvironmentManager class! I do not know why! But it works anyways! So ignore this!", MESSAGE_PRIO.ERROR);
-            Logger.log("Message: " + e.getMessage(), MESSAGE_PRIO.ERROR);
-        }
+        lighting.draw(g2);
+        particleSystems.drawParticleSystems(g2);
     }
 
     /**

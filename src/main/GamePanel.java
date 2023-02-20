@@ -61,6 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
     public long currentTime, lastTime;
     public Graphics2D g2Debug;
     public int collisionCount = 0;
+    public boolean IS_READY = false;
 
     public GamePanel(JFrame mainFrame){
         Logger.log("setting up game-panel!", MESSAGE_PRIO.DEBUG);
@@ -82,6 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
         Logger.log("setting up environment: DONE", MESSAGE_PRIO.DEBUG);
         objManager.setObject();
         Logger.log("setting up game: DONE", MESSAGE_PRIO.NORMAL);
+        IS_READY = true;
     }
 
     public void startGameThread(){
@@ -195,7 +197,9 @@ public class GamePanel extends JPanel implements Runnable {
         //endregion
         //region environment
         long drawEnvironment = System.nanoTime();
-        eManager.draw(g2);
+        if (IS_READY) { //this is a bad fix (better than the last one) to NOT produce a null-pointer with the eManager.draw() methode (lighting is null)
+            eManager.draw(g2);
+        }
         long drawEnvironmentEnd = System.nanoTime();
         //endregion
         //region player

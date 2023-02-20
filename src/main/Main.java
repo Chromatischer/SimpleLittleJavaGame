@@ -35,7 +35,9 @@ public class Main {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-        gamePanel.setupGame();
+        while (! gamePanel.IS_READY) {
+            gamePanel.setupGame();
+        }
         gamePanel.startGameThread();
         Logger.log("Thread started, Game Running!", MESSAGE_PRIO.NORMAL);
     }
