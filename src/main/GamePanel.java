@@ -1,6 +1,5 @@
 package main;
 
-import environment.ParticleSystems;
 import gui.UI;
 import gui.Vignette;
 import entity.Player;
@@ -57,8 +56,12 @@ public class GamePanel extends JPanel implements Runnable {
     public final int MAXWORLDROW = 100;
     //endregion
     public int fps = 75;
+    public int drawCount = 0;
+    public int currentFPS = 0;
+    public long currentTime, lastTime;
     public Graphics2D g2Debug;
     public int collisionCount = 0;
+    public boolean IS_READY = false;
 
     public GamePanel(JFrame mainFrame){
         Logger.log("setting up game-panel!", MESSAGE_PRIO.DEBUG);
@@ -80,6 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
         Logger.log("setting up environment: DONE", MESSAGE_PRIO.DEBUG);
         objManager.setObject();
         Logger.log("setting up game: DONE", MESSAGE_PRIO.NORMAL);
+        IS_READY = true;
     }
 
     public void startGameThread(){
@@ -90,16 +94,15 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run(){
-        double drawInterval = 1_000_000_000F/fps;
+
+        double drawInterval = 1_000_000_000F / fps;
         double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
+        lastTime = System.nanoTime();
         long timer = 0;
         long timer2 = 0;
-        int drawCount = 0;
         int lastScreenX = 0, lastScreenY = 0;
 
-        while (gameThread != null){
+        while (gameThread != null) {
             //region timing variables
             currentTime = System.nanoTime();
 
@@ -110,41 +113,42 @@ public class GamePanel extends JPanel implements Runnable {
             //endregion
 
             //region time-based operations
-            if (delta >= 1){ //updating and redrawing the game at 60FPS
+            if (delta >= 1) { //updating and redrawing the game at FPS
                 repaint();
-                delta --;
-                drawCount ++;
+                delta--;
+                drawCount++;
             }
-            if (timer2 >= 1_000_000 ) { //updates the game every milisecond not based on FPS
+            if (timer2 >= 1_000_000) { //updates the game every milisecond not based on FPS
                 update();
                 timer2 = 0;
             }
 
-            if (timer >= 1_000_000_000){ //displaying the FPS every 1 second
+            if (timer >= 1_000_000_000) { //displaying the FPS every 1 second
                 mainFrame2.setTitle("2D Game" + " (" + drawCount + "FPS)");
+                currentFPS = drawCount;
                 drawCount = 0;
                 timer = 0;
             }
             //endregion
 
             //region function to control the resizability of the game!
-            if ((MAXSCREENCOL * (TILESIZE + ORIGINALTILESIZE) < getSize().width) && (MAXSCREENROW * (TILESIZE + ORIGINALTILESIZE) < getSize().height)){
-                SCALE ++;
+            if ((MAXSCREENCOL * (TILESIZE + ORIGINALTILESIZE) < getSize().width) && (MAXSCREENROW * (TILESIZE + ORIGINALTILESIZE) < getSize().height)) {
+                SCALE++;
                 TILESIZE = ORIGINALTILESIZE * SCALE; //48px
             }
-            if ((MAXSCREENCOL * (TILESIZE - ORIGINALTILESIZE) > getSize().width) && (MAXSCREENROW * (TILESIZE - ORIGINALTILESIZE) > getSize().height)){
-                SCALE --;
+            if ((MAXSCREENCOL * (TILESIZE - ORIGINALTILESIZE) > getSize().width) && (MAXSCREENROW * (TILESIZE - ORIGINALTILESIZE) > getSize().height)) {
+                SCALE--;
                 TILESIZE = ORIGINALTILESIZE * SCALE; //48px
             }
-            if (lastScreenX != getWidth() || lastScreenY != getHeight()){
+            if (lastScreenX != getWidth() || lastScreenY != getHeight()) {
                 int playerX = player.screenX;
                 int playerY = player.screenY;
                 Rectangle playerBox = player.solidArea;
                 lastScreenX = getWidth();
                 lastScreenY = getHeight();
-                EnvironmentManager.updateAll();
+                eManager.updateLighting();
                 vignette.update();
-                if (lastPlayerScreenX != playerX || lastPlayerScreenY != playerY || lastPlayerSolidArea != playerBox){
+                if (lastPlayerScreenX != playerX || lastPlayerScreenY != playerY || lastPlayerSolidArea != playerBox) {
                     player.ui.eraseRect(lastPlayerSolidArea, lastPlayerScreenX, lastPlayerScreenY, Color.RED);
                     player.ui.drawRect(playerBox, playerX, playerY, Color.RED);
                     lastPlayerScreenX = playerX;
@@ -158,7 +162,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update(){
         player.update();
-        ParticleSystems.updateParticleSystems();
+        eManager.updateParticleSystems();
     }
 
     int avrgLenght = 80;
@@ -193,7 +197,9 @@ public class GamePanel extends JPanel implements Runnable {
         //endregion
         //region environment
         long drawEnvironment = System.nanoTime();
-        eManager.draw(g2);
+        if (IS_READY) { //this is a bad fix (better than the last one) to NOT produce a null-pointer with the eManager.draw() methode (lighting is null)
+            eManager.draw(g2);
+        }
         long drawEnvironmentEnd = System.nanoTime();
         //endregion
         //region player

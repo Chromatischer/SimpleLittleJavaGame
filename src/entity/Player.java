@@ -1,8 +1,5 @@
 package entity;
 
-import environment.ParticleSystem;
-import environment.ParticleSystems;
-import gameExceptions.GameException;
 import gui.UI;
 import inventory.INVENTORY_TYPE;
 import inventory.Inventory;
@@ -58,17 +55,9 @@ public class Player extends Entity {
         inventory = new Inventory(27, INVENTORY_TYPE.PLAYER);
         ui.drawHealth(health, HEALTH_EFFECTS.NORMAL);
         //starting point on the map
-        worldX = 50*gp.TILESIZE;
-        worldY = 50*gp.TILESIZE;
+        worldX = 50 * gp.TILESIZE;
+        worldY = 50 * gp.TILESIZE;
         setDirection("idle");
-        ParticleSystem particleSystem = null;
-        try {
-            particleSystem = new ParticleSystem(20, 50, false, false, "/res/ui/full_heart.png", 1, 0, screenX, screenY, 20, 20, 5, false);
-        } catch (GameException e){
-            e.printStackTrace();
-        }
-        assert particleSystem != null;
-        ParticleSystems.addParticleSystem(particleSystem);
     }
 
     /**
@@ -177,7 +166,6 @@ public class Player extends Entity {
                 case "Key":
                     inventory.addItemStack(new ItemStack(ITEM_TYPE.KEY, 1));
                     gp.obj[index] = null;
-                    gp.ui.showMessage("you have picked up a key!");
                     break;
                 case "Chest":
                     if (inventory.subtractItemstack(new ItemStack(ITEM_TYPE.KEY, 1))){
@@ -194,3 +182,22 @@ public class Player extends Entity {
         }
     }
 }
+
+/*
+ParticleSystem particleSystem = null;
+ParticleSystem particleSystem1 = null;
+ParticleSystem particleSystem2 = null;
+try {
+    particleSystem = new ParticleSystem(100, true, 100, true, "/res/ui/full_heart.png", 1, worldX / gp.TILESIZE, worldY / gp.TILESIZE, 3*48, 3*48, 20, false, 1.3, true, 1);
+    particleSystem1 = new ParticleSystem(100, true, 100, true, "/res/object/key.png", 1, (worldX + 2 * gp.TILESIZE) / gp.TILESIZE, (worldY + 2 * gp.TILESIZE) / gp.TILESIZE, 5*48, 5*48, 40, true, 1.6, true, 1);
+    particleSystem2 = new ParticleSystem(200, true, 800, true, "/res/object/chest.png", 1, worldX / gp.TILESIZE, worldY / gp.TILESIZE, 1 * gp.TILESIZE, 1 * gp.TILESIZE, 10, false, 4, false, 1);
+} catch (GameException e){
+    e.printStackTrace();
+}
+assert particleSystem != null;
+ParticleSystems.addParticleSystem(particleSystem);
+assert particleSystem1 != null;
+ParticleSystems.addParticleSystem(particleSystem1);
+assert particleSystem2 != null;
+ParticleSystems.addParticleSystem(particleSystem2);
+ */

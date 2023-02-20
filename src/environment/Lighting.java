@@ -13,13 +13,13 @@ import java.awt.image.BufferedImage;
 import static utilities.Logger.log;
 
 public class Lighting {
-    static GamePanel gp;
-    static BufferedImage darknessFilter;
-    static Color[] color = new Color[12];
-    static float[] fraction = new float[12];
+    GamePanel gp;
+    BufferedImage darknessFilter;
+    Color[] color = new Color[12];
+    float[] fraction = new float[12];
 
     public Lighting(GamePanel gp, int circleSize){
-        Lighting.gp = gp;
+        this.gp = gp;
 
         log("setting up lighting!", MESSAGE_PRIO.DEBUG);
         darknessFilter = new BufferedImage(gp.getWidth(), gp.getHeight(), BufferedImage.TYPE_INT_ARGB); //creates an Image with the screens Dimesions
@@ -86,7 +86,7 @@ public class Lighting {
         //drawing the image to the screen
         g2.drawImage(darknessFilter, 0 , 0, null);
     }
-    public static void updateLighting(int circleSize) {
+    public void updateLighting(int circleSize) {
         if (gp != null){
             log("updating lighting!", MESSAGE_PRIO.DEBUG);
             darknessFilter = new BufferedImage(gp.getWidth(), gp.getHeight(), BufferedImage.TYPE_INT_ARGB); //creates an Image with the screens Dimesions
@@ -131,7 +131,7 @@ public class Lighting {
     /**
      * applies the standard noise to the lighting!
      */
-    private static void applyStandardNoise(){
+    private void applyStandardNoise(){
         ImageNoise.noise(darknessFilter, 50, 5, false, 5);
         ImageNoise.noise(darknessFilter, 100, 3, true, 0);
     }

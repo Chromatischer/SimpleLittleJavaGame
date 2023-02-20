@@ -1,5 +1,8 @@
 package utilities;
 
+import environment.Particle;
+import environment.ParticleSystem;
+
 import java.awt.*;
 
 public class ArrayHelper {
@@ -24,6 +27,20 @@ public class ArrayHelper {
         int count = 0;
         for (Rectangle rectangle : array) {
             if (rectangle != null) count ++;
+        }
+        return count;
+    }
+    public static int lengthNonNull(Particle[] array){
+        int count = 0;
+        for (Particle particle : array) {
+            if (particle != null) count ++;
+        }
+        return count;
+    }
+    public static int lengthNonNull(ParticleSystem[] array){
+        int count = 0;
+        for (ParticleSystem particleSystem : array) {
+            if (particleSystem != null) count ++;
         }
         return count;
     }
