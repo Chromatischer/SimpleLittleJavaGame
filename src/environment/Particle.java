@@ -208,23 +208,29 @@ public class Particle {
      * @param systemX the x position of the Particle-System in world-coordinates
      * @param systemY the y position of the Particle-System in world-coordinates
      */
-    public void draw(Graphics2D g2, GamePanel gp, int systemX, int systemY){
+    public void draw(Graphics2D g2, GamePanel gp, int systemX, int systemY) {
         //(brings the systems coordinates into the right format) + the position of the particle relative to the player - the players world position + the payers screen position
         int screenX = (systemX * gp.TILESIZE) + x - gp.player.worldX + gp.player.screenX;
         int screenY = (systemY * gp.TILESIZE) + y - gp.player.worldY + gp.player.screenY;
-        if (rotation != 0) { //if there is any, will apply a AffineTransform filter to the image and draw it to the screen
-            double rotationRequired = Math.toRadians(rotation);
-            double locationX = image.getWidth() / 2D;
-            double locationY = image.getHeight() / 2D;
-            AffineTransform affineTransform = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
-            AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
-            g2.drawImage(affineTransformOp.filter(image, null), screenX, screenY, size, size, null);
-        } else { //apply no filter and draw directly to screen
-            g2.drawImage(image, screenX, screenY, size, size, null);
-        }
-        if (Main.DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()) {
-            if (Math.min(vectorX, vectorY) != 0) {
-                g2.drawLine(screenX, screenY, screenX + (int) Math.round(vectorX * gp.TILESIZE), screenY + (int) Math.round(vectorY * gp.TILESIZE)); //if the x and y vectors are non 0 AND the DEBUG mode is enabled, there will be lines drawn, from the image to indicate the vectors direction and amount
+
+        if (systemX * gp.TILESIZE + x + gp.TILESIZE > gp.player.worldX - gp.player.screenX &&
+                systemX * gp.TILESIZE + x - gp.TILESIZE < gp.player.worldX + gp.player.screenX &&
+                systemY * gp.TILESIZE + y + gp.TILESIZE > gp.player.worldY - gp.player.screenY &&
+                systemY * gp.TILESIZE + y - gp.TILESIZE < gp.player.worldY + gp.player.screenY) {
+            if (rotation != 0) { //if there is any, will apply a AffineTransform filter to the image and draw it to the screen
+                double rotationRequired = Math.toRadians(rotation);
+                double locationX = image.getWidth() / 2D;
+                double locationY = image.getHeight() / 2D;
+                AffineTransform affineTransform = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+                AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
+                g2.drawImage(affineTransformOp.filter(image, null), screenX, screenY, size, size, null);
+            } else { //apply no filter and draw directly to screen
+                g2.drawImage(image, screenX, screenY, size, size, null);
+            }
+            if (Main.DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()) {
+                if (Math.min(vectorX, vectorY) != 0) {
+                    g2.drawLine(screenX, screenY, screenX + (int) Math.round(vectorX * gp.TILESIZE), screenY + (int) Math.round(vectorY * gp.TILESIZE)); //if the x and y vectors are non 0 AND the DEBUG mode is enabled, there will be lines drawn, from the image to indicate the vectors direction and amount
+                }
             }
         }
     }

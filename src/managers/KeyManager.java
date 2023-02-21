@@ -4,7 +4,9 @@ public class KeyManager implements KeyListener{
     public boolean upPressed, downPressed, leftPressed, rightPressed, inventoryPressed;
 
     @Override
-    public void keyTyped(KeyEvent e) {} //not used
+    public void keyTyped(KeyEvent e) {
+
+    } //not used
 
 
     @Override

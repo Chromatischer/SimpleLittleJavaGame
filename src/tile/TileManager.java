@@ -114,30 +114,38 @@ public class TileManager {
         }
         Logger.log("reading map file: DONE", MESSAGE_PRIO.NORMAL);
     }
-    public void writeMap(String fileMap){
+
+    /**
+     * writes the current mapTileNum array to the specified file
+     * @param fileMap the file to write the map data to
+     */
+    public void writeMap(String fileMap) {
         Logger.log("writing map file!", MESSAGE_PRIO.DEBUG);
-        try {
-            FileWriter fw = new FileWriter(fileMap);
-            assert fw != null;
-            BufferedWriter bw = new BufferedWriter(fw);
-            StringBuilder outputString = new StringBuilder();
-            int col = 0;
-            int row = 0;
-            while (col < gp.MAXWORLDCOL && row < gp.MAXWORLDROW){
-                while (col < gp.MAXWORLDCOL){
-                    outputString.append(" ").append(mapTileNum[col][row]);
-                    col++;
+        try (FileWriter fw = new FileWriter(fileMap, false)) {
+            String[] line;
+            line = new String[gp.MAXWORLDROW];
+            //iterates over each row and colum, adds all the values of one row int a String in the right format
+            for (int row = 0; row < gp.MAXWORLDROW; row++) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int col = 0; col < gp.MAXWORLDCOL; col++) {
+                    if (mapTileNum[col][row] < 10) { //if the tile-num is smaller than 10, the format should be 01 or 04 not 2 or 5
+                        stringBuilder.append("0").append(mapTileNum[col][row]).append(" "); // format: ' 09 '
+                    } else {
+                        stringBuilder.append(mapTileNum[col][row]).append(" ");              // format: '21'
+                    }
                 }
-                if (col == gp.MAXWORLDCOL) {
-                    outputString.append("\n");
-                    col = 0;
-                    row++;
+                if (row != gp.MAXWORLDROW - 1) { //if its the end of the file, does not add another free line!
+                    line[row] = stringBuilder.toString().trim() + "\n";
+                } else {
+                    line[row] = stringBuilder.toString().trim();
                 }
             }
-            String outputStringAsStr = outputString.toString();
-            bw.write(outputStringAsStr);
-
-        } catch (IOException e){
+            //writes all the lines from the prev. step to the file
+            for (String s : line) {
+                fw.write(s);
+            }
+            fw.flush(); //necessary for not forgetting any data
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Logger.log("writing map file: DONE", MESSAGE_PRIO.NORMAL);
@@ -177,7 +185,7 @@ public class TileManager {
         }
     }
     public void setMapTile(int col, int row, int num) throws InvalidParameterException {
-        if (num < 0 || num > 100){
+        if (num < 0 || num > 99){
             throw new InvalidParameterException("image-num out of bounds, expected 0 < image-num < 100");
         }
         mapTileNum[col] [row] = num;

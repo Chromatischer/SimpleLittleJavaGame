@@ -59,9 +59,9 @@ public class Player extends Entity {
         worldX = 50 * gp.TILESIZE;
         worldY = 50 * gp.TILESIZE;
         setDirection("idle");
-        Logger.log(health + "");
-        dealDamage(10, false);
-        Logger.log(health + "");
+        gp.tileM.mapTileNum[50][50] = 0;
+        gp.tileM.mapTileNum[51][51] = 1;
+        gp.tileM.writeMap("src/res/maps/world01.txt");
     }
 
     /**

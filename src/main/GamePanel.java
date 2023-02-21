@@ -1,14 +1,15 @@
 package main;
 
-import gui.UI;
-import gui.Vignette;
 import entity.Player;
 import environment.EnvironmentManager;
-import managers.ImageManager;
+import gameExceptions.GameException;
+import gui.UI;
+import gui.Vignette;
 import managers.KeyManager;
 import managers.MouseClickManager;
 import managers.MouseMoveManager;
 import tile.TileManager;
+import tile.TileMapEditor;
 import utilities.Logger;
 import utilities.MESSAGE_PRIO;
 
@@ -52,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable {
     public SuperObject[] obj = new SuperObject[10]; //10 objects at once in game (high performance impact)
     public EnvironmentManager eManager = new EnvironmentManager(this);
     public Vignette vignette = new Vignette(this, 30, 30);
+    public TileMapEditor mapEditor = new TileMapEditor(this);
     //region world size
     public final int MAXWORLDCOL = 100;
     public final int MAXWORLDROW = 100;
@@ -94,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     @Override
-    public void run(){
+    public void run() {
 
         double drawInterval = 1_000_000_000F / fps;
         double delta = 0;
@@ -164,6 +166,13 @@ public class GamePanel extends JPanel implements Runnable {
     public void update(){
         player.update();
         eManager.updateParticleSystems();
+        if (Main.DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()){
+            try {
+                mapEditor.run(ui.currentSelectedBlockID);
+            } catch (GameException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     int avrgLenght = 80;

@@ -109,6 +109,7 @@ public class UI {
     boolean setDialogueDisplayed;
     String[] dialogueText;
     List<String> debuggingStrings = new ArrayList<>();
+    public int currentSelectedBlockID = 0;
 
     public UI(GamePanel gp, MouseClickManager clickManager, MouseMoveManager moveListener) {
         this.gp = gp;
