@@ -166,13 +166,13 @@ public class GamePanel extends JPanel implements Runnable {
     public void update(){
         player.update();
         eManager.updateParticleSystems();
-        /*if (Main.DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()){
+        if (Main.DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()){
             try {
                 mapEditor.run(ui.currentSelectedBlockID);
             } catch (GameException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
     }
 
     int avrgLenght = 80;
