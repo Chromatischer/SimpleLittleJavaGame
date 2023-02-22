@@ -58,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int MAXWORLDCOL = 100;
     public final int MAXWORLDROW = 100;
     //endregion
-    public int fps = 75;
+    public int fps = 60;
     public int drawCount = 0;
     public int currentFPS = 0;
     public long currentTime, lastTime;
@@ -166,13 +166,13 @@ public class GamePanel extends JPanel implements Runnable {
     public void update(){
         player.update();
         eManager.updateParticleSystems();
-        if (Main.DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()){
+        /*if (Main.DEBUG.ordinal() <= MESSAGE_PRIO.DEBUG.ordinal()){
             try {
                 mapEditor.run(ui.currentSelectedBlockID);
             } catch (GameException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     int avrgLenght = 80;

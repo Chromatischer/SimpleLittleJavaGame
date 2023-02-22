@@ -61,7 +61,7 @@ public class Player extends Entity {
         setDirection("idle");
         gp.tileM.mapTileNum[50][50] = 0;
         gp.tileM.mapTileNum[51][51] = 1;
-        gp.tileM.writeMap("src/res/maps/world01.txt");
+        //gp.tileM.writeMap("src/res/maps/world01.txt");
     }
 
     /**
