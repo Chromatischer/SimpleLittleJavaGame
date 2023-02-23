@@ -105,6 +105,7 @@ public class UI {
     Color[] rectColor;
     DialogueField dialogueField = new DialogueField();
     Graphics2D g2;
+    BlockSelectUI blockSelectUI;
     Integer dialogueY, dialogueX, dialogueWidth, dialogueHeight;
     boolean setDialogueDisplayed;
     String[] dialogueText;
@@ -113,6 +114,7 @@ public class UI {
 
     public UI(GamePanel gp, MouseClickManager clickManager, MouseMoveManager moveListener) {
         this.gp = gp;
+        blockSelectUI = new BlockSelectUI(this.gp);
         this.clickManager = clickManager;
         this.moveListener = moveListener;
         drawRect = new Rectangle[20];
@@ -155,6 +157,9 @@ public class UI {
         } else {
             drawInventory();
         }
+        blockSelectUI.run();
+        blockSelectUI.draw(g2, gp.getWidth() - 2 * gp.TILESIZE, 0);
+        currentSelectedBlockID = blockSelectUI.getSelectedBlockID();
         drawAllDialogue();
         drawAllRects();
         drawFlashScreen();

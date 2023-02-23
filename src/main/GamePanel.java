@@ -3,11 +3,13 @@ package main;
 import entity.Player;
 import environment.EnvironmentManager;
 import gameExceptions.GameException;
+import gui.BlockSelectUI;
 import gui.UI;
 import gui.Vignette;
 import managers.KeyManager;
 import managers.MouseClickManager;
 import managers.MouseMoveManager;
+import managers.MouseWheelManager;
 import tile.TileManager;
 import tile.TileMapEditor;
 import utilities.Logger;
@@ -43,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     public KeyManager keyH = new KeyManager();
     public MouseClickManager mouseKM = new MouseClickManager();
     public MouseMoveManager mouseML = new MouseMoveManager();
+    public MouseWheelManager mouseWM = new MouseWheelManager();
     public ObjectManager objManager = new ObjectManager(this);
     public UI ui = new UI(this, mouseKM, mouseML);
     public CollisionChecker cChecker = new CollisionChecker(this, ui);
@@ -75,6 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
         addKeyListener(keyH); //adding the key listener
         addMouseListener(mouseKM);
         addMouseMotionListener(mouseML);
+        addMouseWheelListener(mouseWM);
         setFocusable(true); //used for catching userinputs
         Logger.log("setting up game-panel: DONE", MESSAGE_PRIO.NORMAL);
     }

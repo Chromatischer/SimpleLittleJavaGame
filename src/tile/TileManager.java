@@ -124,6 +124,7 @@ public class TileManager {
         try (FileWriter fw = new FileWriter(fileMap, false)) {
             String[] line;
             line = new String[gp.MAXWORLDROW];
+            int counter = 0; //TODO: add a slider or something indicating it is doing something!
             //iterates over each row and colum, adds all the values of one row int a String in the right format
             for (int row = 0; row < gp.MAXWORLDROW; row++) {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -133,8 +134,9 @@ public class TileManager {
                     } else {
                         stringBuilder.append(mapTileNum[col][row]).append(" ");              // format: '21'
                     }
+                    counter ++;
                 }
-                if (row != gp.MAXWORLDROW - 1) { //if its the end of the file, does not add another free line!
+                if (row != gp.MAXWORLDROW - 1) { //if it's the end of the file, does not add another free line!
                     line[row] = stringBuilder.toString().trim() + "\n";
                 } else {
                     line[row] = stringBuilder.toString().trim();
